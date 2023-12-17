@@ -1,0 +1,46 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="main">
+    <div class="filters">
+        <h3>Фильтры</h3>
+        <select class="comboboxFilter" id="combobox">
+            <option value="1">Услуга</option>
+            <option value="2">Ремонт проводов</option>
+            <option value="3">Ремонт щита</option>
+            <option value="4">Установка щита</option>
+            <option value="5">Проводка кабеля</option>
+        </select>
+        <a class="textFilterA">Стоимость</a>
+        <div>
+            <input class="textFilter" type="text" value="от" />
+            <input class="textFilter" type="text" value="до" />
+        </div>
+        <a class ="textFilterA">Опыт работы исполнителя</a>
+        <select id="combobox">
+            <option value="1">Любой</option>
+            <option value="2">Менее 1 года</option>
+            <option value="3">2 года</option>
+            <option value="4">3 года и больше</option>
+        </select>
+        <a class="textFilterA">Исполнитель закупает материал</a>
+        <input type="checkbox" value="false" name="byMaterial"/>
+        <label>Да</label>
+        <a class="textFilterA">Рейтинг исполнителя</a>
+        <input type="checkbox" value="false" name="rate"/>
+        <label>4 и выше</label>
+    </div>
+    <div class="cards">
+        <div onclick="window.location.href='/Home/Master'" class="card">
+            <img class="imgMaster" src="~/img/cat.jpg" />
+            <a class="textNameCard">Имя мастера</a>
+            <a class="textDescriptionCard">Описание</a>
+            <a class="textAddressCard">Адрес</a>
+            <img class="imgRate" src="~/img/icons8-star-96.png" />
+            <img class="imgFavorite" src="~/img/icons8-favorite-96-standart.png" />
+            <a class="textCommentCard">Отзывы</a>
+            <a class="textCostCard">Цена</a>
+        </div>
+    </div>
+</div>
