@@ -1,6 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+@model List<Employee>
 
 <div class="main">
     <div class="filters">
@@ -14,11 +15,11 @@
         </select>
         <a class="textFilterA">Стоимость</a>
         <div>
-            <input class="textFilter" type="text" value="от" />
+            <input class="textFilter" type="text" value="от" onclick="clearText"/>
             <input class="textFilter" type="text" value="до" />
         </div>
         <a class ="textFilterA">Опыт работы исполнителя</a>
-        <select id="combobox">
+        <select class="comboboxFilterAge" id="combobox">
             <option value="1">Любой</option>
             <option value="2">Менее 1 года</option>
             <option value="3">2 года</option>
@@ -26,10 +27,10 @@
         </select>
         <a class="textFilterA">Исполнитель закупает материал</a>
         <input type="checkbox" value="false" name="byMaterial"/>
-        <label>Да</label>
+        <label class="labelFilterA">Да</label>
         <a class="textFilterA">Рейтинг исполнителя</a>
         <input type="checkbox" value="false" name="rate"/>
-        <label>4 и выше</label>
+        <label class ="labelFilterA">4 и выше</label>
     </div>
     <div class="cards">
         <div onclick="window.location.href='/Home/Master'" class="card">
@@ -39,8 +40,16 @@
             <a class="textAddressCard">Адрес</a>
             <img class="imgRate" src="~/img/icons8-star-96.png" />
             <img class="imgFavorite" src="~/img/icons8-favorite-96-standart.png" />
-            <a class="textCommentCard">Отзывы</a>
             <a class="textCostCard">Цена</a>
         </div>
     </div>
+    <table class="table">
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.EmployeeName</td>
+                <td>@item.EmployeeAddress</td>
+            </tr>
+        }
+    </table>
 </div>
