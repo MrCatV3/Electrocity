@@ -33,23 +33,18 @@
         <label class ="labelFilterA">4 и выше</label>
     </div>
     <div class="cards">
-        <div onclick="window.location.href='/Home/Master'" class="card">
-            <img class="imgMaster" src="~/img/cat.jpg" />
-            <a class="textNameCard">Имя мастера</a>
-            <a class="textDescriptionCard">Описание</a>
-            <a class="textAddressCard">Адрес</a>
-            <img class="imgRate" src="~/img/icons8-star-96.png" />
-            <img class="imgFavorite" src="~/img/icons8-favorite-96-standart.png" />
-            <a class="textCostCard">Цена</a>
-        </div>
-    </div>
-    <table class="table">
+        
         @foreach (var item in Model)
         {
-            <tr>
-                <td>@item.EmployeeName</td>
-                <td>@item.EmployeeAddress</td>
-            </tr>
+            <div onclick="window.location.href='/Home/Master'" class="card">
+                <img class="imgMaster" src="@item.EmployeeImage" />
+                <a class="textNameCard">@item.EmployeeName</a>
+                <a class="textDescriptionCard">--=Описание=--</a>
+                <a class="textAddressCard">@item.EmployeeAddress</a>
+                <img class="imgRate" src="~/img/icons8-star-96.png" />
+                <img class="imgFavorite" src="~/img/icons8-favorite-96-standart.png" />
+                <a class="textCostCard">--=Цена=--</a>
+            </div>
         }
-    </table>
+    </div>
 </div>

@@ -1,4 +1,6 @@
-﻿namespace Electrociti.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Electrociti.Models
 {
     public class Employee
     {
@@ -11,11 +13,11 @@
         public DateTime EmployeeBirthday { get; set; }
         public DateTime EmployeeRegistrationDate { get; set; }
         public string EmployeePassword { get; set; }
+        public string EmployeeImage {  get; set; }
 
 
-        public string CommentEmployee { get; set; }
-        public Comment Comment {  get; set; }
-        public int RoleEmployee {  get; set; }
+        public int RoleEmployee { get; set; }
+        [ForeignKey("RoleEmployee")]
         public RoleEmployee Role { get; set; }
     }
 }

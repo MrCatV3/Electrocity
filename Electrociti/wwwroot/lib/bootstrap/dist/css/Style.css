@@ -12,6 +12,7 @@ header {
 }
 footer{
     border-top: 1px solid #000;
+    grid-row-start: auto;
 }
 .textFooter {
     color: #031086;
@@ -167,9 +168,11 @@ footer{
     }
 .cards {
     margin: 20px;
+    grid-row-start: 2;
+    grid-column-end: auto;
 }
 .main {
-    height: 1200px;
+    height: fit-content;
     display: flex;
 }
 .filters {
@@ -250,9 +253,6 @@ footer{
     font-style: normal;
 }
 
-.table{
-
-}
 
 /* Admin panel */
 .filtersAdmin {

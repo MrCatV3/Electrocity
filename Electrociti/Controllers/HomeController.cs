@@ -8,7 +8,7 @@ namespace Electrociti.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        ApplicationContext _context;
+        private readonly ApplicationContext _context;
 
         public HomeController(ILogger<HomeController> logger, ApplicationContext context)
         {
@@ -18,13 +18,15 @@ namespace Electrociti.Controllers
 
         public IActionResult Index()
         {
-            var Users = _context.Employees.ToList();
+            var Users = _context.Employee.ToList();
             return View(Users);
         }
+
         public IActionResult Master()
         {
             return View();
         }
+
         public IActionResult Admin()
         {
             return View();
@@ -38,7 +40,6 @@ namespace Electrociti.Controllers
 
         public ActionResult Login()
         {
-            // Возвращайте представление для формы входа
             return View();
         }
 
@@ -47,35 +48,25 @@ namespace Electrociti.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Предполагаем, что у вас есть экземпляр контекста базы данных
                 using (var context = new ApplicationContext())
                 {
-                    // Поиск пользователя по логину и паролю
-                    var loginEmployee = context.Employees.SingleOrDefault(u => u.EmployeeName == employee.EmployeeName && u.EmployeeName == employee.EmployeeName);
-
+                    var loginEmployee = context.Employee.SingleOrDefault(u => u.EmployeeName == employee.EmployeeName && u.EmployeeName == employee.EmployeeName);
                     if (loginEmployee != null)
                     {
-                        // Пользователь найден, выполняем вход
-                        // В реальном приложении это может включать установку куки аутентификации, создание сессии и т.д.
-
-                        // Перенаправление на главную страницу после успешной авторизации
                         return RedirectToAction("Index", "Home");
                     }
                     else
                     {
-                        // Пользователь не найден, добавляем ошибку в ModelState
                         ModelState.AddModelError("", "Неверные логин или пароль.");
                     }
                 }
             }
 
-            // Если ModelState не прошла валидацию, возвращаем представление с ошибками
             return View(employee);
         }
 
         public ActionResult Register()
         {
-            // Возвращайте представление для формы регистрации
             return View();
         }
 
@@ -84,37 +75,24 @@ namespace Electrociti.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Предполагается, что у вас уже есть экземпляр контекста базы данных
                 using (var context = new ApplicationContext())
                 {
-                    // Проверка, что пользователь с таким именем пользователя не существует
-                    if (context.Employees.Any(u => u.EmployeeName == employee.EmployeeName))
+                    if (context.Employee.Any(u => u.EmployeeName == employee.EmployeeName))
                     {
                         ModelState.AddModelError("Username", "Пользователь с таким именем уже существует.");
                         return View(employee);
                     }
-
-                    // Хеширование пароля (лучше использовать библиотеку хеширования)
-                    // В данном примере, просто добавим "salt" к паролю
                     employee.EmployeePassword = HashPassword(employee.EmployeePassword);
-
-                    // Добавление пользователя в контекст базы данных
-                    context.Employees.Add(employee);
+                    context.Employee.Add(employee);
                     context.SaveChanges();
-
-                    // Перенаправление на главную страницу после успешной регистрации
                     return RedirectToAction("Index", "Home");
                 }
             }
-
-            // Если ModelState не прошла валидацию, возвращаем представление с ошибками
             return View(employee);
         }
 
         private string HashPassword(string password)
         {
-            // В реальном приложении лучше использовать библиотеку хеширования
-            // Этот пример просто добавляет "salt" к паролю
             string salt = "RandomSalt123";
             return Convert.ToBase64String(Encoding.UTF8.GetBytes(password + salt));
         }
