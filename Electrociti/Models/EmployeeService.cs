@@ -4,9 +4,9 @@
     {
         public int EmployeeServiceId { get; set; }
         
-        public int EmployeeService_ {  get; set; }
+        public int EmployeeId {  get; set; }
         public Employee Employee { get; set; }
-        public int ServiceEmployee {  get; set; }
+        public int ServiceId {  get; set; }
         public Service Service { get; set; }
     }
 }

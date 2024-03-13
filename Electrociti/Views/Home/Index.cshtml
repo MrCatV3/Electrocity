@@ -1,7 +1,9 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-@model List<Employee>
+@using Electrociti.ViewModels
+@model EmployeeServiceEmployeeServices
+
 
 <div class="main">
     <div class="filters">
@@ -34,16 +36,41 @@
     </div>
     <div class="cards">
         
-        @foreach (var item in Model)
+        @foreach (var employee in Model.Employee)
         {
             <div onclick="window.location.href='/Home/Master'" class="card">
-                <img class="imgMaster" src="@item.EmployeeImage" />
-                <a class="textNameCard">@item.EmployeeName</a>
-                <a class="textDescriptionCard">--=Описание=--</a>
-                <a class="textAddressCard">@item.EmployeeAddress</a>
+                <img class="imgMaster" src="@employee.EmployeeImage" />
+                <a class="textNameCard">@employee.EmployeeName</a>
+                <a class="textDescriptionCard">@employee.EmployeeDescription</a>
+                <a class="textAddressCard">@employee.EmployeeAddress</a>
                 <img class="imgRate" src="~/img/icons8-star-96.png" />
                 <img class="imgFavorite" src="~/img/icons8-favorite-96-standart.png" />
-                <a class="textCostCard">--=Цена=--</a>
+                <div style="flex-direction:column;grid-column:2;grid-row:2">
+                    @foreach (var service in Model.EmployeeServices
+                   .Join(Model.Services, x => x.ServiceId, z => z.ServiceId, (x, z) => new { x, z })
+                   .Join(Model.Employee, c => c.x.EmployeeId, p => p.EmployeeId, (c, p) => new { c.x, c.z, p })
+                   .Where(s => s.p.EmployeeId == employee.EmployeeId)
+                   .Take(3))
+                   {
+                       <div class="divCostCard">
+                           <a class="textCostCard">@service.z.ServiceCost</a>
+                       </div>
+                   }
+
+                </div>
+                <div style="flex-direction:column;grid-column:2;grid-row:2">
+                    @foreach (var service in Model.EmployeeServices
+                   .Join(Model.Services, x => x.ServiceId, z => z.ServiceId, (x, z) => new { x, z })
+                   .Join(Model.Employee, c => c.x.EmployeeId, p => p.EmployeeId, (c, p) => new { c.x, c.z, p })
+                   .Where(s => s.p.EmployeeId == employee.EmployeeId)
+                   .Take(3))
+                    {
+                        <div class="divCostCard">
+                            <a class="textNameSCard">@service.z.ServiceName</a>
+                        </div>
+                    }
+
+                </div>
             </div>
         }
     </div>
