@@ -3,18 +3,24 @@
 @{
     ViewData["Title"] = "Login";
 }
+<div >
 
-<h1>Login</h1>
-@using (Html.BeginForm("Index", "Home", FormMethod.Post))
-{
-    @Html.LabelFor(model => model.EmployeeName)
-    @Html.TextBoxFor(model => model.EmployeeName)
-    <br />
+    <form asp-action="Login" asp-controller="Home" method="post" >
+        <div >
+            <h1>Авторизация</h1>
+        </div>
 
-    @Html.LabelFor(model => model.EmployeePassword)
-    @Html.PasswordFor(model => model.EmployeePassword)
-    <br />
+        <div >
+            <input type="text" id="login" name="login" placeholder="Телефон" autocomplete="off" />
+        </div>
 
-    <input type="submit" value="Login" href="/Home/Index"/>
-}
+        <div >
+            <input  type="password" id="password" name="password" placeholder="Пароль" />
+        </div>
+
+        <button type="submit">Вход</button>
+
+        <button type="submit" formaction="/Home/Register">Регистрация</button>
+    </form>
+</div>
 

@@ -9,7 +9,7 @@ namespace Electrociti.Data
         public EmployeeServiceLogin(ApplicationContext context)
         {
             _context = context; 
-            _employee = _context.Employee.ToList();
+            _employee = _context.Employee2.ToList();
         }
         public Employee GetEmployee(string login, string password) 
         {

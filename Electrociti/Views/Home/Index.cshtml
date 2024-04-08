@@ -10,10 +10,10 @@
         <h3>Фильтры</h3>
         <select class="comboboxFilter" id="combobox">
             <option value="1">Услуга</option>
-            <option value="2">Ремонт проводов</option>
-            <option value="3">Ремонт щита</option>
-            <option value="4">Установка щита</option>
-            <option value="5">Проводка кабеля</option>
+            @foreach (var service in Model.Services)
+            {
+                <option value="@service.ServiceId">@service.ServiceName</option>
+            }
         </select>
         <a class="textFilterA">Стоимость</a>
         <div>
@@ -35,8 +35,7 @@
         <label class ="labelFilterA">4 и выше</label>
     </div>
     <div class="cards">
-        
-        @foreach (var employee in Model.Employee)
+        @foreach (var employee in Model.Employee.Where(e => e.EmployeeRole == 2))
         {
             <div onclick="window.location.href='/Home/Master'" class="card">
                 <img class="imgMaster" src="@employee.EmployeeImage" />
@@ -47,29 +46,27 @@
                 <img class="imgFavorite" src="~/img/icons8-favorite-96-standart.png" />
                 <div style="flex-direction:column;grid-column:2;grid-row:2">
                     @foreach (var service in Model.EmployeeServices
-                   .Join(Model.Services, x => x.ServiceId, z => z.ServiceId, (x, z) => new { x, z })
-                   .Join(Model.Employee, c => c.x.EmployeeId, p => p.EmployeeId, (c, p) => new { c.x, c.z, p })
-                   .Where(s => s.p.EmployeeId == employee.EmployeeId)
-                   .Take(3))
-                   {
-                       <div class="divCostCard">
-                           <a class="textCostCard">@service.z.ServiceCost</a>
-                       </div>
-                   }
-
-                </div>
-                <div style="flex-direction:column;grid-column:2;grid-row:2">
-                    @foreach (var service in Model.EmployeeServices
-                   .Join(Model.Services, x => x.ServiceId, z => z.ServiceId, (x, z) => new { x, z })
-                   .Join(Model.Employee, c => c.x.EmployeeId, p => p.EmployeeId, (c, p) => new { c.x, c.z, p })
-                   .Where(s => s.p.EmployeeId == employee.EmployeeId)
+                   .Join(Model.Services, es => es.ServiceId, s => s.ServiceId, (es, s) => new { es, s })
+                   .Join(Model.Employee, es2 => es2.es.EmployeeId, e => e.EmployeeId, (es2, e) => new { es2.es, es2.s, e })
+                   .Where(e2 => e2.e.EmployeeId == employee.EmployeeId)
                    .Take(3))
                     {
                         <div class="divCostCard">
-                            <a class="textNameSCard">@service.z.ServiceName</a>
+                            <a class="textCostCard">@service.s.ServiceCost</a>
                         </div>
                     }
-
+                </div>
+                <div style="flex-direction:column;grid-column:2;grid-row:2">
+                    @foreach (var service in Model.EmployeeServices
+                   .Join(Model.Services, es => es.ServiceId, s => s.ServiceId, (es, s) => new { es, s })
+                   .Join(Model.Employee, es2 => es2.es.EmployeeId, e => e.EmployeeId, (es2, e) => new { es2.es, es2.s, e })
+                   .Where(e2 => e2.e.EmployeeId == employee.EmployeeId)
+                   .Take(3))
+                    {
+                        <div class="divCostCard">
+                            <a class="textNameSCard">@service.s.ServiceName</a>
+                        </div>
+                    }
                 </div>
             </div>
         }

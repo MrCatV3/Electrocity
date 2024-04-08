@@ -14,11 +14,9 @@ namespace Electrociti.Models
         public DateTime EmployeeRegistrationDate { get; set; }
         public string EmployeePassword { get; set; }
         public string EmployeeImage {  get; set; }
+        public int EmployeeRole { get; set; }
         public string EmployeeDescription { get; set; }
 
-        public int RoleEmployee { get; set; }
-        [ForeignKey("RoleEmployee")]
-        public RoleEmployee Role { get; set; }
 
         
     }

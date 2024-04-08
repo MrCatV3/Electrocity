@@ -8,12 +8,11 @@ namespace Electrociti.Models
         private readonly string _connectionString = "Data Source=DESKTOP-8ES4I02\\SQLEXPRESS;Database=ElectroCity;Integrated Security=sspi;Encrypt=False;TrustServerCertificate=true";
 
         public DbSet<Service> Service { get; set; }
-        public DbSet<Employee> Employee { get; set; }
+        public DbSet<Employee> Employee2 { get; set; }
         public DbSet<Comment> Comments { get; set; }
-        public DbSet<Purchase> Purchases { get; set; }
-        public DbSet<RoleEmployee> Roles { get; set; }
-        public DbSet<EmployeeService> EmployeeService2 { get; set; }
-        public DbSet<CommentEmployee> CommentEmployees { get; set; }
+        public DbSet<Purchase> Purchases2 { get; set; }
+        public DbSet<EmployeeService> EmployeeService { get; set; }
+        public DbSet<CommentEmployee> CommentEmployees2 { get; set; }
 
         public ApplicationContext()
         {

@@ -7,7 +7,8 @@ body {
     user-select: none;
 }
 header {
-    display: inline;
+    display: grid;
+    grid-template-columns: 15%, 5%, 50%, 5%, 10%, 10%, 5%;
     user-select: none;
 }
 footer{
@@ -28,8 +29,7 @@ footer{
     height: 46px;
     border: 1px solid #214DA3;
     background: #F9F9F9;
-    display: inline-block;
-    margin-left: 167px;
+    margin-left: 37px;
     border: 1px solid black;
     border-radius: 5px 5px;
     vertical-align: top;
@@ -37,6 +37,8 @@ footer{
     font-family: Inter;
     font-size: 20px;
     font-style: normal;
+    grid-column: 3;
+    text-align:center;
 }
 .buttonSearch {
     width: 150px;
@@ -50,21 +52,29 @@ footer{
     font-style: normal;
     font-weight: 200;
     line-height: normal;
-    display: inline-block;
-    margin-left: -10px;
+    margin-left: -20px;
     vertical-align: top;
     margin-top: 25px;
+    grid-column: 4;
+    text-align:center;
 }
     .buttonSearch:hover {
+        color: deepskyblue;
         border-color: #0E2A59;
         transform: scale(1.01);
     }
+.ContainerSearch {
+    display: grid;
+    grid-column: 3;
+    text-align:center;
+}
 .buttonQuery {
-    width: 250px;
+    width: 240px;
     height: 50px;
     border: 1px solid #214DA3;
     background: #214DA3;
     color: #FFF;
+    text-align:center;
     font-family: Inter;
     font-size: 20px;
     font-style: normal;
@@ -72,12 +82,13 @@ footer{
     line-height: normal;
     border: 1px solid #214DA3;
     border-radius: 5px;
-    display: inline-block;
     vertical-align: top;
     margin-left: 10px;
     margin-top: 25px;
+    grid-column: 4;
 }
     .buttonQuery:hover {
+        color: deepskyblue;
         border-color: #0E2A59;
         transform: scale(1.01);
     }
@@ -86,7 +97,7 @@ footer{
     width: 75px;
     border: 1px solid #000;
     border-radius: 90px;
-    display: inline-block;
+    display: grid;
     margin-top: 15px;
     margin-left: 15px;
 }
@@ -97,9 +108,12 @@ footer{
     font-family: Inter;
     font-size: 20px;
     font-style: normal;
+    display: grid;
+    grid-column: 2;
 }
 .IconContainer {
-    display: inline-block;
+    display: grid;
+    grid-column: 1;
 }
 .imgAvatar {
     height: 50px;
@@ -110,9 +124,10 @@ footer{
     margin-bottom: 10px;
 }
 .image-container {
-    margin-left: 1800px;
     position: relative;
-    display: inline-block;
+    display: grid;
+    grid-column: 6;
+    margin-top:15px;
 }
 .textFilter {
     width: 120px;
@@ -135,20 +150,45 @@ footer{
     font-style: normal;
 }
 .logRegDiv {
-    display: inline;
-    margin-left: 1570px;
+    display: grid;
+    grid-column: 5;
+    margin-top: 25px;
+    width: 100px;
+    border: 1px solid #214DA3;
+    border-radius: 5px 5px;
+    background: #214DA3;
+    color: #FFF;
+    font-family: Inter;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 200;
+    line-height: normal;
     top: 0;
+    height: 30px;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+    .logRegDiv:hover {
+        color: deepskyblue;
+        border-color: #0E2A59;
+        transform: scale(1.01);
+    }
 }
 .textAvatar {
-    color: #000;
+    border: 1px solid #214DA3;
+    border-radius: 5px 5px;
+    background: #214DA3;
+    color: #FFF;
+    width: 100px;
     font-family: Inter;
-    font-size: 18px;
+    font-size: 20px;
     font-style: normal;
-    font-weight: 400;
+    font-weight: 200;
     line-height: normal;
-    display: flex;
-    color: black;
+    display: grid;
     top: 0;
+    height: 30px;
     text-decoration: none;
     transition: color 0.3s;
 }
@@ -222,7 +262,7 @@ footer{
 .textNameSCard {
     grid-row: 2;
     grid-column: 2;
-    margin-left: 60px;
+    margin-left: 100px;
     font-family: Inter;
     font-size: 18px;
     font-style: normal;

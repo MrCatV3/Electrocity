@@ -24,22 +24,11 @@ namespace Electrociti.Controllers
         }
         public IActionResult Index()
         {
-            //var Users = _context.Employee.ToList();
-            /*var viewModelList = _context.Employee
-            .Join(_context.Services,
-                emp => emp.EmployeeId,
-                serv => serv.ServiceCost,
-                (emp, serv) => new EmployeeServiceEmployeeServices
-                {
-                    Employee = emp.EmployeeName,
-                    Services = serv.ServiceCost
-                })
-            .ToList();*/
             EmployeeServiceEmployeeServices VM = new EmployeeServiceEmployeeServices
             {
-                Employee = _context.Employee.ToList(),
+                Employee = _context.Employee2.ToList(),
                 Services = _context.Service.ToList(),
-                EmployeeServices = _context.EmployeeService2.ToList(),
+                EmployeeServices = _context.EmployeeService.ToList(),
             };
             return View(VM);
         }
@@ -59,16 +48,30 @@ namespace Electrociti.Controllers
         {
             return View();
         }
-        public ActionResult Login()
+        
+        [HttpGet]
+        public IActionResult Login()
         {
-            return View();
+            if (HttpContext.Session.GetInt32("EmployeeId") != null)
+            {
+                return View("EmployeeProfile");
+            }
+            else { return View("Login"); }
         }
         [HttpPost]
         public IActionResult Login(string login, string password)
         {
             var employeeService = new EmployeeServiceLogin(_context);
             var employee = employeeService.GetEmployee(login, password);
-            HttpContext.Session.SetInt32("EmployeeId", employee.EmployeeId);
+            if (employee != null)
+            {
+                HttpContext.Session.SetInt32("EmployeeId", employee.EmployeeId);
+            }
+            else
+            {
+                ModelState.AddModelError(string.Empty, "Неверная попытка входа.");
+                return View();
+            }
 
             if (HttpContext.Session.GetInt32("EmployeeId") != 1 && employee != null)
             {
@@ -76,7 +79,7 @@ namespace Electrociti.Controllers
             }
             else if (HttpContext.Session.GetInt32("EmployeeId") == 1)
             {
-                return View("AdminView");
+                return View("Admin");
             }
 
             else
@@ -85,30 +88,9 @@ namespace Electrociti.Controllers
                 return View();
             }
         }
+        
 
-        /*[HttpPost]
-        public ActionResult Login(Employee employee)
-        {
-            if (ModelState.IsValid)
-            {
-                using (var context = new ApplicationContext())
-                {
-                    var loginEmployee = context.Employee.SingleOrDefault(u => u.EmployeeName == employee.EmployeeName && u.EmployeeName == employee.EmployeeName);
-                    if (loginEmployee != null)
-                    {
-                        return RedirectToAction("Index", "Home");
-                    }
-                    else
-                    {
-                        ModelState.AddModelError("", "Неверные логин или пароль.");
-                    }
-                }
-            }
-
-            return View(employee);
-        }*/
-
-        public ActionResult Register()
+        public IActionResult Register()
         {
             return View();
         }
