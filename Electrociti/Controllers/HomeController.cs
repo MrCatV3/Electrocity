@@ -2,6 +2,7 @@
 using Electrociti.Models;
 using Electrociti.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using System.Diagnostics;
 using System.Text;
 
@@ -40,6 +41,7 @@ namespace Electrociti.Controllers
         {
             return View();
         }
+        [HttpGet]
         public IActionResult EmployeeProfile()
         {
             return View();
@@ -69,22 +71,21 @@ namespace Electrociti.Controllers
             }
             else
             {
-                ModelState.AddModelError(string.Empty, "Неверная попытка входа.");
                 return View();
             }
 
-            if (HttpContext.Session.GetInt32("EmployeeId") != 1 && employee != null)
+            if (HttpContext.Session.GetInt32("EmployeeRole") != 1 && employee != null)
             {
                 return RedirectToAction("Index", "Home");
             }
-            else if (HttpContext.Session.GetInt32("EmployeeId") == 1)
+            else if (HttpContext.Session.GetInt32("EmployeeRole") == 1)
             {
                 return View("Admin");
             }
 
             else
             {
-                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                
                 return View();
             }
         }

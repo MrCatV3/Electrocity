@@ -29,7 +29,7 @@ footer{
     height: 46px;
     border: 1px solid #214DA3;
     background: #F9F9F9;
-    margin-left: 37px;
+    margin-left: -25px;
     border: 1px solid black;
     border-radius: 5px 5px;
     vertical-align: top;
@@ -74,7 +74,6 @@ footer{
     border: 1px solid #214DA3;
     background: #214DA3;
     color: #FFF;
-    text-align:center;
     font-family: Inter;
     font-size: 20px;
     font-style: normal;
@@ -86,6 +85,7 @@ footer{
     margin-left: 10px;
     margin-top: 25px;
     grid-column: 4;
+    text-align: center;
 }
     .buttonQuery:hover {
         color: deepskyblue;
@@ -103,13 +103,15 @@ footer{
 }
 .spanName {
     vertical-align: top;
-    text-decoration: none;
     margin-top: 15px;
-    font-family: Inter;
-    font-size: 20px;
-    font-style: normal;
     display: grid;
     grid-column: 2;
+    height: 75px;
+    width: 150px;
+}
+.imgElectro {
+    height: 75px;
+    width: 150px;
 }
 .IconContainer {
     display: grid;
@@ -167,6 +169,7 @@ footer{
     height: 30px;
     text-decoration: none;
     transition: color 0.3s;
+    text-align:center;
 }
 
     .logRegDiv:hover {
@@ -174,7 +177,7 @@ footer{
         border-color: #0E2A59;
         transform: scale(1.01);
     }
-}
+
 .textAvatar {
     border: 1px solid #214DA3;
     border-radius: 5px 5px;

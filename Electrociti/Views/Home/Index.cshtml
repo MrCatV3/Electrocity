@@ -50,11 +50,11 @@
                    .Join(Model.Employee, es2 => es2.es.EmployeeId, e => e.EmployeeId, (es2, e) => new { es2.es, es2.s, e })
                    .Where(e2 => e2.e.EmployeeId == employee.EmployeeId)
                    .Take(3))
-                    {
-                        <div class="divCostCard">
-                            <a class="textCostCard">@service.s.ServiceCost</a>
-                        </div>
-                    }
+                   {
+                       <div class="divCostCard">
+                           <a class="textCostCard">@service.s.ServiceCost</a>
+                       </div>
+                   }
                 </div>
                 <div style="flex-direction:column;grid-column:2;grid-row:2">
                     @foreach (var service in Model.EmployeeServices
@@ -62,11 +62,11 @@
                    .Join(Model.Employee, es2 => es2.es.EmployeeId, e => e.EmployeeId, (es2, e) => new { es2.es, es2.s, e })
                    .Where(e2 => e2.e.EmployeeId == employee.EmployeeId)
                    .Take(3))
-                    {
-                        <div class="divCostCard">
-                            <a class="textNameSCard">@service.s.ServiceName</a>
-                        </div>
-                    }
+                   {
+                       <div class="divCostCard">
+                           <a class="textNameSCard">@service.s.ServiceName</a>
+                       </div>
+                   }
                 </div>
             </div>
         }
