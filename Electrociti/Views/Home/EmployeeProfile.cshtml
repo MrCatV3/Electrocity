@@ -1,7 +1,17 @@
-﻿@page
-@model Electrociti.Views.Home.EmployeeProfileModel
-@{
+﻿@{
     ViewData["Title"] = "EmployeeProfile";
 }
+@using Electrociti.ViewModels
+@model Employee
 
-    <a class="textAvatar" href="/Home/Index">Выход</a>
+<a class="buttonExit" href="/Home/Index">Выход</a>
+@* <a href="@Url.Action("Logout", "Control")" class="buttonExit">Выход</a> *@
+@* <div onclick="window.location.href='/Home/Master'" class="card"></div> *@
+<div>
+    @*<img class="imgMaster" src="@Model.EmployeeImage"/>*@
+    <a class="textNameCard">@Model.EmployeeName</a>
+    <a class="textDescriptionCard">@Model.EmployeeDescription</a>
+    <a class="textAddressCard">@Model.EmployeeAddress</a>
+    <a class="textRateCard">@Model.EmployeeRate</a>
+    <a class="textPhone">@Model.EmployeePhone</a>
+</div>

@@ -8,7 +8,7 @@ body {
 }
 header {
     display: grid;
-    grid-template-columns: 15%, 5%, 50%, 5%, 10%, 10%, 5%;
+    grid-template-columns: 5%, 5%, 0%, 80%, 0%, 5%, 5%;
     user-select: none;
 }
 footer{
@@ -24,21 +24,24 @@ footer{
     line-height: normal;
     display: flex;
 }
+.headerFix {
+    width: 1000px;
+    grid-column: 3;
+    visibility: hidden;
+}
 .textSearch {
-    width: 760px;
+    width: 250px;
     height: 46px;
     border: 1px solid #214DA3;
     background: #F9F9F9;
-    margin-left: -25px;
     border: 1px solid black;
     border-radius: 5px 5px;
     vertical-align: top;
-    margin-top: 25px;
+    margin-bottom: 5px;
     font-family: Inter;
     font-size: 20px;
     font-style: normal;
     grid-column: 3;
-    text-align:center;
 }
 .buttonSearch {
     width: 150px;
@@ -113,6 +116,9 @@ footer{
     height: 75px;
     width: 150px;
 }
+.filterName {
+    margin-left: 85px;
+}
 .IconContainer {
     display: grid;
     grid-column: 1;
@@ -177,7 +183,28 @@ footer{
         border-color: #0E2A59;
         transform: scale(1.01);
     }
+.buttonExit {
+    border: 1px solid #214DA3;
+    border-radius: 5px 5px;
+    background: #214DA3;
+    color: #FFF;
+    width: 100px;
+    margin-top: 20px;
+    font-family: Inter;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 200;
+    line-height: normal;
+    display: grid;
+    top: 0;
+    height: 30px;
+    text-decoration: none;
+    transition: color 0.3s;
+}
 
+.buttonExit:hover {
+    color: deepskyblue;
+}
 .textAvatar {
     border: 1px solid #214DA3;
     border-radius: 5px 5px;
@@ -203,6 +230,7 @@ footer{
     background: #F5F5F5;
     width: 1170px;
     margin: 20px;
+    /*margin-left: 270px;*/
     grid-template-columns: 220px 850px 50px 50px;
     grid-template-rows: 50px 50px 70px 50px 1fr;
     display: grid;
@@ -225,6 +253,31 @@ footer{
 .filters {
     margin: 20px;
 }
+.buttonAccept {
+    width: 150px;
+    height: 50px;
+    border: 1px solid #214DA3;
+    border-radius: 5px 5px;
+    background: #214DA3;
+    color: #FFF;
+    font-family: Inter;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 200;
+    line-height: normal;
+    vertical-align: top;
+    margin-top: 40px;
+    margin-left: -52px;
+    grid-column: 4;
+    text-align: center;
+}
+
+.buttonAccept:hover {
+    color: deepskyblue;
+    border-color: #0E2A59;
+    transform: scale(1.01);
+}
+
 .labelFilterA {
     font-size: 20px;
 }
@@ -289,6 +342,20 @@ footer{
     grid-row: 1;
     margin-top: 5px;
 }
+.textRateCard {
+    height: 25px;
+    width: 25px;
+    display: grid;
+    grid-column: 4;
+    grid-row: 1;
+    margin-top: 7px;
+    margin-left: 7px;
+    font-size: 20px
+}
+    .textRateCard:hover {
+    transform: scale(1.01);
+    color: deepskyblue;
+}
 .imgRate {
     height: 25px;
     width: 25px;
@@ -297,6 +364,17 @@ footer{
     grid-row: 1;
     margin-top: 5px;
 }
+.textPhone {
+    display: grid;
+    grid-column: 2;
+    grid-row: 4;
+    font-size: 18px;
+    margin-left: 700px;
+}
+    .textPhone:hover {
+        transform: scale(1.01);
+        color: deepskyblue;
+    }
 .comboboxFilter {
     border: 1px solid #214DA3;
     border-radius: 5px 5px;
@@ -342,3 +420,74 @@ footer{
 .displayInfo {
 
 }
+
+
+
+/*Login view*/
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login-form {
+    width: 300px;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #f2f2f2;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.login-title {
+    color: #333;
+    font-size: 24px;
+}
+
+.login-input {
+    margin-bottom: 15px;
+}
+
+.login-textbox {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.login-button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+    .login-button:hover {
+        background-color: #0056b3;
+    }
+
+.register-button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #28a745;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+    .register-button:hover {
+        background-color: #218838;
+    }

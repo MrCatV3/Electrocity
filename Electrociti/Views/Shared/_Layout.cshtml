@@ -15,14 +15,11 @@
         <a class="spanName" href="/Home/Index">
             <img class="imgElectro" src="~/img/electrocity.png"/>
         </a>
-        <div class="ContainerSearch">
-            <input class="textSearch" type="text" />
-            <button class="buttonSearch">Поиск</button>
-        </div>
         
-        <div class="buttonQuery">
+        <a class="headerFix"></a>
+        @* <div class="buttonQuery">
             <a >Оставить обьявление</a>
-        </div>
+        </div> *@
         <a class="logRegDiv" href="/Home/Login">Вход</a>
        
         <a class="image-container" href="/Home/EmployeeProfile">
@@ -47,5 +44,6 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+    
 </body>
 </html>

@@ -5,15 +5,4 @@
 }
 
 <h1>Register</h1>
-@using (Html.BeginForm("Index", "Home", FormMethod.Post))
-{
-    @Html.LabelFor(model => model.EmployeeName)
-    @Html.TextBoxFor(model => model.EmployeeName)
-    <br />
 
-    @Html.LabelFor(model => model.EmployeePassword)
-    @Html.PasswordFor(model => model.EmployeePassword)
-    <br />
-
-    <input type="submit" value="Register" href="/Home/Index"/>
-}

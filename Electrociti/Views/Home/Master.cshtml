@@ -1,11 +1,15 @@
-﻿@page
-@model Electrociti.Views.Home.MasterModel
+﻿@using Electrociti.ViewModels
+@model EmployeeServiceEmployeeServices
 
 
 <div class="main">
-    <a>HELLO</a>
-    <a>HELLO</a>
-    <a>HELLO</a>
-    <a>HELLO</a>
-    <a>HELLO</a>
+   @*  @foreach (var service in Model.EmployeeServices
+    .Join(Model.Services, es => es.ServiceId, s => s.ServiceId, (es, s) => new { es, s })
+    .Join(Model.Employee, es2 => es2.es.EmployeeId, e => e.EmployeeId, (es2, e) => new { es2.es, es2.s, e })
+    .Where(e2 => e2.e.EmployeeId))
+    {
+        <div class="divCostCard">
+            <a class="textCostCard">@service.s.ServiceCost</a>
+        </div>
+    } *@
 </div>

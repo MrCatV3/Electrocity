@@ -1,12 +1,69 @@
-﻿@page
-@model Electrociti.Views.Home.AdminModel
+﻿@using Electrociti.ViewModels
+@model EmployeeServiceEmployeeServices
 
 <div class="main">
     <div class="filtersAdmin">
-        <a class="filterChoise">Список пользователей</a>
-        <a class="filterChoise">Список исполнителей</a>
+        <form>
+            <label>
+                <input type="radio" name="filter" value="users" checked>
+                Список пользователей
+            </label><br>
+            <label>
+                <input type="radio" name="filter" value="performers">
+                Список исполнителей
+            </label><br>
+            <label>
+                <input type="radio" name="filter" value="services">
+                Список услуг
+            </label>
+        </form>
     </div>
     <div class="displayInfo">
-
+        @if (Model != null && Model.Employee != null && Model.Employee.Any())
+        {
+            @foreach (var employee in Model.Employee.Where(e => e.EmployeeRole == 2))
+            {
+                <div class="card">
+                    <img class="imgMaster" src="@employee.EmployeeImage" />
+                    <a class="textNameCard">@employee.EmployeeName</a>
+                    <a class="textDescriptionCard">@employee.EmployeeDescription</a>
+                    <a class="textAddressCard">@employee.EmployeeAddress</a>
+                    <img class="imgRate" src="~/img/icons8-star-96.png" />
+                    <a class="textRateCard">@employee.EmployeeRate</a>
+                    <a class="textPhone">@employee.EmployeePhone</a>
+                    <img class="imgFavorite" src="~/img/icons8-favorite-96-standart.png" onclick="handleClickFavorite" />
+                    <div style="flex-direction:column;grid-column:2;grid-row:2">
+                        @foreach (var service in Model.EmployeeServices
+                       .Join(Model.Services, es => es.ServiceId, s => s.ServiceId, (es, s) => new { es, s })
+                       .Join(Model.Employee, es2 => es2.es.EmployeeId, e => e.EmployeeId, (es2, e) => new { es2.es, es2.s, e })
+                       .Where(e2 => e2.e.EmployeeId == employee.EmployeeId)
+                       .Take(3))
+                        {
+                            <div class="divCostCard">
+                                <a class="textCostCard">@service.s.ServiceCost</a>
+                            </div>
+                        }
+                    </div>
+                    <div style="flex-direction:column;grid-column:2;grid-row:2">
+                        @foreach (var service in Model.EmployeeServices
+                       .Join(Model.Services, es => es.ServiceId, s => s.ServiceId, (es, s) => new { es, s })
+                       .Join(Model.Employee, es2 => es2.es.EmployeeId, e => e.EmployeeId, (es2, e) => new { es2.es, es2.s, e })
+                       .Where(e2 => e2.e.EmployeeId == employee.EmployeeId)
+                       .Take(3))
+                        {
+                            <div class="divCostCard">
+                                <a class="textNameSCard">@service.s.ServiceName</a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div style="background-color:#FFF;">
+                <p style="color:#000; margin-left:20px;">По вашему запросу ничего не найдено</p>
+            </div>
+        }
     </div>
 </div>

@@ -10,6 +10,7 @@ namespace Electrociti.Models
         public string EmployeePatronomic { get; set; }
         public string EmployeeAddress { get; set; }
         public string EmployeePhone { get; set; }
+        public string EmployeeRate { get; set; }
         public DateTime EmployeeBirthday { get; set; }
         public DateTime EmployeeRegistrationDate { get; set; }
         public string EmployeePassword { get; set; }
