@@ -165,15 +165,46 @@ namespace Electrociti.Controllers
                 return View();
             }
         }
-        //public IActionResult Logout()
-        //{
-        //    var emptyModel = new Employee();
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
 
-        //    HttpContext.Session.Clear();
+            return RedirectToAction("Index", "Home");
+        }
+        [HttpGet]
+        public IActionResult UpdateEmployeeProfile()
+        {
+            int? employeeId = HttpContext.Session.GetInt32("EmployeeId").Value;
+            var employee = _context.Employee2.Find(employeeId);
 
-        //    return RedirectToAction("Index", "Home", emptyModel);
-        //}
+            return View(employee);
+        }
+        [HttpPost]
+        public IActionResult UpdateEmployeeProfile(Employee updatedEmployee, string EmployeePassword)
+        {
 
+            var existingEmployee = _context.Employee2.Find(updatedEmployee.EmployeeId);
+
+
+            if (existingEmployee != null)
+            {
+                existingEmployee.EmployeeName = updatedEmployee.EmployeeName;
+                existingEmployee.EmployeeDescription = updatedEmployee.EmployeeDescription;
+                existingEmployee.EmployeeAddress = updatedEmployee.EmployeeAddress;
+                if (existingEmployee.EmployeePassword == EmployeePassword)
+                {
+                    if (!string.IsNullOrEmpty(updatedEmployee.EmployeePhone))
+                    {
+                        existingEmployee.EmployeePhone = updatedEmployee.EmployeePhone;
+                    }
+                }
+
+                _context.SaveChanges();
+                return RedirectToAction("EmployeeProfile");
+            }
+            return View(updatedEmployee);
+
+        }
 
         public IActionResult Register()
         {

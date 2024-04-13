@@ -114,7 +114,7 @@ footer{
 }
 .imgElectro {
     height: 75px;
-    width: 150px;
+    width: 190px;
 }
 .filterName {
     margin-left: 85px;
@@ -188,40 +188,62 @@ footer{
     border-radius: 5px 5px;
     background: #214DA3;
     color: #FFF;
-    width: 100px;
     margin-top: 20px;
+    margin-left: -5px;
     font-family: Inter;
     font-size: 20px;
     font-style: normal;
     font-weight: 200;
     line-height: normal;
-    display: grid;
-    top: 0;
     height: 30px;
     text-decoration: none;
     transition: color 0.3s;
+    width: 150px;
 }
 
 .buttonExit:hover {
     color: deepskyblue;
 }
-.textAvatar {
+.containerButtonProfile {
+    display: flex;
+}
+.buttonEdit {
     border: 1px solid #214DA3;
     border-radius: 5px 5px;
     background: #214DA3;
     color: #FFF;
-    width: 100px;
+    margin-top: 20px;
+    margin-left: 10px;
     font-family: Inter;
     font-size: 20px;
     font-style: normal;
     font-weight: 200;
     line-height: normal;
-    display: grid;
-    top: 0;
     height: 30px;
+    width: 150px;
     text-decoration: none;
     transition: color 0.3s;
 }
+    .buttonEdit:hover {
+        color: deepskyblue;
+    }
+    .textAvatar {
+        border: 1px solid #214DA3;
+        border-radius: 5px 5px;
+        background: #214DA3;
+        color: #FFF;
+        width: 100px;
+        font-family: Inter;
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 200;
+        line-height: normal;
+        display: grid;
+        top: 0;
+        height: 30px;
+        text-decoration: none;
+        transition: color 0.3s;
+    }
     .textAvatar:hover {
         color: deepskyblue;
     }
@@ -428,7 +450,7 @@ footer{
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: 83vh;
 }
 
 .login-form {
@@ -454,7 +476,7 @@ footer{
 }
 
 .login-textbox {
-    width: 100%;
+    width: 280px;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -465,7 +487,7 @@ footer{
     padding: 10px;
     border: none;
     border-radius: 5px;
-    background-color: #007bff;
+    background-color: #214DA3;
     color: #fff;
     font-size: 16px;
     cursor: pointer;
@@ -473,7 +495,7 @@ footer{
 }
 
     .login-button:hover {
-        background-color: #0056b3;
+        background-color: deepskyblue;
     }
 
 .register-button {
@@ -481,13 +503,100 @@ footer{
     padding: 10px;
     border: none;
     border-radius: 5px;
-    background-color: #28a745;
+    background-color: #214DA3;
     color: #fff;
     font-size: 16px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    margin-top: 15px;
 }
 
     .register-button:hover {
-        background-color: #218838;
+        background-color: deepskyblue;
     }
+
+.profile-card {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 20px;
+    width: 300px;
+    margin: 0 auto;
+}
+
+    .profile-card img {
+        max-width: 100%;
+        border-radius: 50%;
+        align-content: center;
+        align-items: center;
+        margin-left: 35px;
+    }
+
+    .profile-card .text {
+        margin-top: 10px;
+        margin-left: 30px;
+    }
+
+    .profile-card .text-name {
+        font-size: 20px;
+        font-weight: bold;
+        margin-left: 30px;
+    }
+
+    .profile-card .text-description {
+        font-size: 16px;    
+        color: #666;
+    }
+
+    .profile-card .text-address {
+        font-size: 14px;
+        color: #888;
+    }
+
+    .profile-card .text-rate {
+        font-size: 14px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .profile-card .text-phone {
+        font-size: 14px;
+        color: #444;
+    }
+
+
+.form-container {
+    width: 300px;
+    margin: 0 auto; 
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+    .form-container h1 {
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .form-container input[type="text"],
+    .form-container input[type="password"] {
+        width: 280px;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .form-container button[type="submit"] {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+        .form-container button[type="submit"]:hover {
+            background-color: #0056b3;
+        }

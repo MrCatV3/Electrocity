@@ -1,0 +1,38 @@
+﻿@{
+    ViewData["Title"] = "UpdateEmployeeProfile";
+}
+@using Electrociti.ViewModels
+@model Employee
+
+
+<form asp-action="UpdateEmployeeProfile" asp-controller="Home" method="post" class="form-container">
+    <div>
+        <div>
+            <h1>Редактирование профиля</h1>
+        </div>
+
+        <div>
+            <input type="text" id="eName" name="EmployeeName" placeholder="Имя" autocomplete="off" value="@Model.EmployeeName" required min="1" />
+        </div>
+
+        <div>
+            <input type="text" id="address" name="EmployeeAddress" placeholder="Адрес" autocomplete="off" value="@Model.EmployeeAddress" required min="1" />
+        </div>
+
+        <div>
+            <input type="text" id="pNumber" name="EmployeePhone" placeholder="Номер телефона" pattern="[0-9]+" title="Введите только цифры" maxlength="11" autocomplete="off" required minlength="11" value="@Model.EmployeePhone"/>
+        </div>
+
+        <div>
+            <input type="password" id="oldPass" name="EmployeePassword" placeholder="Старый пароль" autocomplete="off" />
+        </div>
+
+        <div>
+            <input type="password" id="newPass" name="Password" placeholder="Новый пароль" autocomplete="off" />
+        </div>
+
+        <input type="hidden" name="EmployeeId" value="@Model.EmployeeId" />
+
+        <button type="submit">Сохранить</button>
+    </div>
+</form>

@@ -4,14 +4,20 @@
 @using Electrociti.ViewModels
 @model Employee
 
-<a class="buttonExit" href="/Home/Index">Выход</a>
-@* <a href="@Url.Action("Logout", "Control")" class="buttonExit">Выход</a> *@
-@* <div onclick="window.location.href='/Home/Master'" class="card"></div> *@
-<div>
-    @*<img class="imgMaster" src="@Model.EmployeeImage"/>*@
-    <a class="textNameCard">@Model.EmployeeName</a>
-    <a class="textDescriptionCard">@Model.EmployeeDescription</a>
-    <a class="textAddressCard">@Model.EmployeeAddress</a>
-    <a class="textRateCard">@Model.EmployeeRate</a>
-    <a class="textPhone">@Model.EmployeePhone</a>
+
+<div class="profile-card">
+    <img class="imgMaster" src="@Model.EmployeeImage" />
+    <div class="text text-name">@Model.EmployeeName</div>
+    <div class="text text-description">@Model.EmployeeDescription</div>
+    <div class="text text-address">@Model.EmployeeAddress</div>
+    <div class="text text-rate">@Model.EmployeeRate</div>
+    <div class="text text-phone">@Model.EmployeePhone</div>
+    <div class="containerButtonProfile">
+        <form asp-controller="Home" asp-action="Logout" method="post">
+        <button class="buttonExit" type="submit">Выход</button>
+    </form>
+        <form asp-controller="Home" asp-action="UpdateEmployeeProfile" method="post">
+        <button class="buttonEdit" type="submit">Редактировать</button>
+    </form>
+    </div>
 </div>
