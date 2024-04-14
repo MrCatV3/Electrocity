@@ -3,13 +3,20 @@
 
 
 <div class="main">
-   @*  @foreach (var service in Model.EmployeeServices
-    .Join(Model.Services, es => es.ServiceId, s => s.ServiceId, (es, s) => new { es, s })
-    .Join(Model.Employee, es2 => es2.es.EmployeeId, e => e.EmployeeId, (es2, e) => new { es2.es, es2.s, e })
-    .Where(e2 => e2.e.EmployeeId))
-    {
-        <div class="divCostCard">
-            <a class="textCostCard">@service.s.ServiceCost</a>
-        </div>
-    } *@
+    <div class="profile-card">
+        @foreach (var empl in Model.Employee)
+        {
+            <img class="imgMaster" src="@empl.EmployeeImage" />
+            <div class="text text-name">@empl.EmployeeName</div>
+            <div class="text text-description">@empl.EmployeeDescription</div>
+            <div class="text text-address">@empl.EmployeeAddress</div>
+            <div class="text text-rate">@empl.EmployeeRate</div>
+            <div class="text text-phone">@empl.EmployeePhone</div>
+
+            @foreach (var serv in Model.Services)
+        {
+                <div class="">@serv.ServiceName         @serv.ServiceCost</div>
+            }
+        }
+    </div>
 </div>

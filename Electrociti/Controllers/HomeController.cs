@@ -31,8 +31,9 @@ namespace Electrociti.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
        
-        public ViewResult Index(string searchString, int? minCost, int? maxCost, bool rate)
+        public ViewResult Index(string searchString, int? minCost, int? maxCost, bool rate, int MasterId)
         {
+            
             List<Employee> searchResults;
             if (minCost == null )
             {
@@ -85,6 +86,7 @@ namespace Electrociti.Controllers
             };
 
             return View(VM);
+            
         }
 
         public IActionResult EP()
@@ -102,10 +104,27 @@ namespace Electrociti.Controllers
             return View("EmployeeProfile", employee);
         }
         [HttpGet]
-        public IActionResult Master()
+        public IActionResult Master(int EmployeeId)
         {
-            return View();
+            var employeeServices = _context.EmployeeService
+                .Include(es => es.Service)
+                .Where(es => es.EmployeeId == EmployeeId)
+                .ToList();
+
+            var employee = _context.Employee2.Where(e => e.EmployeeId == EmployeeId).ToList();
+
+            EmployeeServiceEmployeeServices VM = new EmployeeServiceEmployeeServices
+            {
+                Employee = employee,
+                Services = employeeServices.Select(es => es.Service).ToList(),
+                EmployeeServices = employeeServices
+            };
+
+            return View(VM);
         }
+
+
+
         public IActionResult Folowing()
         {
             return View();

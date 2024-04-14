@@ -42,10 +42,12 @@
     </div>
     <div class="cards">
         @if (Model != null && Model.Employee != null && Model.Employee.Any())
-    {
+        {
             @foreach (var employee in Model.Employee.Where(e => e.EmployeeRole == 2))
             {
-                <div onclick="window.location.href='/Home/Master'" class="card">
+                <form asp-action="Master" asp-controller="Home" method="get">
+                    <input type="hidden" name="EmployeeId" value="@employee.EmployeeId" />
+                    <div onclick="window.location.href='/Home/Master?EmployeeId=@employee.EmployeeId'" class="card">
                     <img class="imgMaster" src="@employee.EmployeeImage" />
                     <a class="textNameCard">@employee.EmployeeName</a>
                     <a class="textDescriptionCard">@employee.EmployeeDescription</a>
@@ -78,7 +80,9 @@
                             </div>
                         }
                     </div>
-                </div>
+            </div>
+                </form>
+                
             }
         }
         else
