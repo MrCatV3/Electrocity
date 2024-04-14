@@ -101,6 +101,7 @@ namespace Electrociti.Controllers
             Employee? employee = _context.Employee2.Where(e => e.EmployeeId == EmployeeId).FirstOrDefault();
             return View("EmployeeProfile", employee);
         }
+        [HttpGet]
         public IActionResult Master()
         {
             return View();
@@ -174,33 +175,32 @@ namespace Electrociti.Controllers
         [HttpGet]
         public IActionResult UpdateEmployeeProfile()
         {
-            int? employeeId = HttpContext.Session.GetInt32("EmployeeId").Value;
+            int employeeId = HttpContext.Session.GetInt32("EmployeeId").Value;
             var employee = _context.Employee2.Find(employeeId);
 
             return View(employee);
         }
         [HttpPost]
-        public IActionResult UpdateEmployeeProfile(Employee updatedEmployee, string EmployeePassword)
+        public IActionResult UpdateEmployeeProfile(Employee updatedEmployee, string Password)
         {
 
             var existingEmployee = _context.Employee2.Find(updatedEmployee.EmployeeId);
 
-
             if (existingEmployee != null)
             {
                 existingEmployee.EmployeeName = updatedEmployee.EmployeeName;
-                existingEmployee.EmployeeDescription = updatedEmployee.EmployeeDescription;
                 existingEmployee.EmployeeAddress = updatedEmployee.EmployeeAddress;
-                if (existingEmployee.EmployeePassword == EmployeePassword)
+                existingEmployee.EmployeePhone = updatedEmployee.EmployeePhone;
+                if (existingEmployee.EmployeePassword == updatedEmployee.EmployeePassword)
                 {
-                    if (!string.IsNullOrEmpty(updatedEmployee.EmployeePhone))
+                    if (!string.IsNullOrEmpty(updatedEmployee.EmployeePassword))
                     {
-                        existingEmployee.EmployeePhone = updatedEmployee.EmployeePhone;
+                        existingEmployee.EmployeePassword = Password;
                     }
                 }
 
                 _context.SaveChanges();
-                return RedirectToAction("EmployeeProfile");
+                return RedirectToAction("Index");
             }
             return View(updatedEmployee);
 
