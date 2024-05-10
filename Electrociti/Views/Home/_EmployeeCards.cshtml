@@ -1,0 +1,36 @@
+﻿@model Electrociti.ViewModels.EmployeeServiceEmployeeServices
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/Style.css" asp-append-version="true" />
+
+@if (Model != null && Model.Employee != null && Model.Employee.Any())
+{
+    @foreach (var employee in Model.Employee.Where(e => e.EmployeeRole == 2))
+    {
+        <div onclick="window.location.href='/Home/Master?EmployeeId=@employee.EmployeeId'" class="card">
+            <img class="imgMaster" src="@employee.EmployeeImage" />
+            <a class="textNameCard">@employee.EmployeeName</a>
+            <a class="textDescriptionCard">@employee.EmployeeDescription</a>
+            <a class="textAddressCard">@employee.EmployeeAddress</a>
+            <img class="imgRate" src="~/img/icons8-star-96.png" />
+            <a class="textRateCard">@employee.EmployeeRate</a>
+            <a class="textPhone">@employee.EmployeePhone</a>
+            <img class="imgFavorite" src="~/img/icons8-favorite-96-standart.png" onclick="handleClickFavorite" />
+            <div style="flex-direction:column;grid-column:2;grid-row:2">
+                @foreach (var service in Model.EmployeeServices
+               .Where(es => es.EmployeeId == employee.EmployeeId)
+               .Take(3))
+                {
+                    <div class="divCostCard">
+                        <p><strong>@service.Service.ServiceName:</strong> @service.Service.ServiceCost</p>
+                    </div>
+                }
+            </div>
+
+        </div>
+    }
+}
+else
+{
+    <div style="background-color:#FFF;">
+        <p style="color:#000; margin-left:20px;">По вашему запросу ничего не найдено</p>
+    </div>
+}

@@ -1,95 +1,63 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+
 @using Electrociti.ViewModels
 @model EmployeeServiceEmployeeServices
 
-
 <div class="main">
     <div class="filters">
-         @* <form action="/Home/Index" method="get">
-            <select class="comboboxFilter" action="/Home/Index" method="get" name="ServiceFilter" id="combobox">
-                <option value="0">Услуга</option>
-                @foreach (var service in Model.Services)
-                {
-                    <option value="@service.ServiceId">@service.ServiceName</option>
-                }
-            </select>
-        </form>  *@
-        
-        <h3 class="filterName" >Фильтры</h3>
-        <form action="/Home/Index" method="get">
-            <input class="textSearch" type="text" name="searchString" placeholder="Поиск (улица, описание, услуги)" />
+        <h3 class="filterName">Фильтры</h3>
+        <form id="filterForm">
+            <input class="textSearch" type="text" id="searchString" name="searchString" placeholder="Поиск (улица, описание, услуги)" />
             <div>
                 <input class="textFilter" type="text" id="minCost" name="minCost" placeholder="от" />
                 <input class="textFilter" type="text" id="maxCost" name="maxCost" placeholder="до" />
             </div>
-        <a class ="textFilterA">Опыт работы исполнителя</a>
-        <select class="comboboxFilterAge" id="combobox">
-            <option value="1">Любой</option>
-            <option value="2">Менее 1 года</option>
-            <option value="3">2 года</option>
-            <option value="4">3 года и больше</option>
-        </select>
-        <a class="textFilterA">Исполнитель закупает материал</a>
-        <input type="checkbox" value="false" name="byMaterial"/>
-        <label class="labelFilterA">Да</label>
-        <a class="textFilterA">Рейтинг исполнителя</a>
-        <input type="checkbox" id="rate" value="false" name="rate"/>
-        <label class ="labelFilterA">4 и выше</label>
-        <button class="buttonAccept" type="submit">Применить</button>
+            <a class="textFilterA">Опыт работы исполнителя</a>
+            <select class="comboboxFilterAge" id="combobox">
+                <option value="1">Любой</option>
+                <option value="2">Менее 1 года</option>
+                <option value="3">2 года</option>
+                <option value="4">3 года и больше</option>
+            </select>
+            <a class="textFilterA">Исполнитель закупает материал</a>
+            <input type="checkbox" id="byMaterial" name="byMaterial" />
+            <label class="labelFilterA">Да</label>
+            <a class="textFilterA">Рейтинг исполнителя</a>
+            <input type="checkbox" id="rate" name="rate" />
+            <label class="labelFilterA">4 и выше</label>
+            <button class="buttonAccept" type="button" onclick="applyFilters()">Применить</button>
         </form>
     </div>
-    <div class="cards">
-        @if (Model != null && Model.Employee != null && Model.Employee.Any())
-        {
-            @foreach (var employee in Model.Employee.Where(e => e.EmployeeRole == 2))
-            {
-                <form asp-action="Master" asp-controller="Home" method="get">
-                    <input type="hidden" name="EmployeeId" value="@employee.EmployeeId" />
-                    <div onclick="window.location.href='/Home/Master?EmployeeId=@employee.EmployeeId'" class="card">
-                    <img class="imgMaster" src="@employee.EmployeeImage" />
-                    <a class="textNameCard">@employee.EmployeeName</a>
-                    <a class="textDescriptionCard">@employee.EmployeeDescription</a>
-                    <a class="textAddressCard">@employee.EmployeeAddress</a>
-                    <img class="imgRate" src="~/img/icons8-star-96.png" />
-                    <a class="textRateCard">@employee.EmployeeRate</a>
-                    <a class="textPhone">@employee.EmployeePhone</a>
-                    <img class="imgFavorite" src="~/img/icons8-favorite-96-standart.png" onclick="handleClickFavorite" />
-                    <div style="flex-direction:column;grid-column:2;grid-row:2">
-                        @foreach (var service in Model.EmployeeServices
-                     .Join(Model.Services, es => es.ServiceId, s => s.ServiceId, (es, s) => new { es, s })
-                     .Join(Model.Employee, es2 => es2.es.EmployeeId, e => e.EmployeeId, (es2, e) => new { es2.es, es2.s, e })
-                     .Where(e2 => e2.e.EmployeeId == employee.EmployeeId)
-                     .Take(3))
-                        {
-                            <div class="divCostCard">
-                                <a class="textCostCard">@service.s.ServiceCost</a>
-                            </div>
-                        }
-                    </div>
-                    <div style="flex-direction:column;grid-column:2;grid-row:2">
-                        @foreach (var service in Model.EmployeeServices
-                     .Join(Model.Services, es => es.ServiceId, s => s.ServiceId, (es, s) => new { es, s })
-                     .Join(Model.Employee, es2 => es2.es.EmployeeId, e => e.EmployeeId, (es2, e) => new { es2.es, es2.s, e })
-                     .Where(e2 => e2.e.EmployeeId == employee.EmployeeId)
-                     .Take(3))
-                        {
-                            <div class="divCostCard">
-                                <a class="textNameSCard">@service.s.ServiceName</a>
-                            </div>
-                        }
-                    </div>
-            </div>
-                </form>
-                
-            }
-        }
-        else
-        {
-            <div style="background-color:#FFF;">
-                <p style="color:#000; margin-left:20px;">По вашему запросу ничего не найдено</p>
-            </div>
-        }
+    <div class="cards" id="cardContainer">
+        @Html.Partial("_EmployeeCards", Model)
     </div>
 </div>
+
+
+<script>
+    function applyFilters() {
+        var searchString = document.getElementById("searchString").value;
+        var minCost = document.getElementById("minCost").value;
+        var maxCost = document.getElementById("maxCost").value;
+        var rate = document.getElementById("rate").checked;
+
+        $.ajax({
+            url: '/Home/GetFilteredUsers', // Измененный URL
+            type: 'GET',
+            data: {
+                searchString: searchString,
+                minCost: minCost,
+                maxCost: maxCost,
+                rate: rate
+            },
+            success: function (result) {
+                $('#cardContainer').html(result);
+            },
+            error: function (error) {
+                console.error('Ошибка при выполнении AJAX запроса:', error);
+            }
+        });
+    }
+</script>

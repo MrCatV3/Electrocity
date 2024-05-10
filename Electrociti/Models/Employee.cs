@@ -17,8 +17,5 @@ namespace Electrociti.Models
         public string EmployeeImage {  get; set; }
         public int EmployeeRole { get; set; }
         public string EmployeeDescription { get; set; }
-
-
-        
     }
 }
