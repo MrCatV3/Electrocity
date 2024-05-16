@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Index";
 }
 @using Electrociti.ViewModels
 @model EmployeeServiceEmployeeServices
@@ -7,16 +7,6 @@
 
 <div class="main">
     <div class="filters">
-         @* <form action="/Home/Index" method="get">
-            <select class="comboboxFilter" action="/Home/Index" method="get" name="ServiceFilter" id="combobox">
-                <option value="0">Услуга</option>
-                @foreach (var service in Model.Services)
-                {
-                    <option value="@service.ServiceId">@service.ServiceName</option>
-                }
-            </select>
-        </form>  *@
-        
         <h3 class="filterName" >Фильтры</h3>
         <form action="/Home/Index" method="get">
             <input class="textSearch" type="text" name="searchString" placeholder="Поиск (улица, описание, услуги)" />

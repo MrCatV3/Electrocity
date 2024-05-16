@@ -2,18 +2,31 @@
 body {
     background: #FFF;
     width: auto;
-    height: auto;
+    height: 100%;
     margin: 0px;
     user-select: none;
+    display: grid;
+}
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+.main {
+    display: grid;
+    grid-row: 2;
 }
 header {
+    grid-row: 1;
     display: grid;
     grid-template-columns: 5%, 5%, 0%, 80%, 0%, 5%, 5%;
     user-select: none;
 }
 footer{
+    grid-row: 3;
     border-top: 1px solid #000;
     grid-row-start: auto;
+    margin-top: auto;
 }
 .textFooter {
     color: #031086;
@@ -427,7 +440,8 @@ footer{
 
 /* Admin panel */
 .filtersAdmin {
-
+    margin-top: 30px;
+    width: 300px;
 }
 .filterChoise {
     margin-top: 50px;
@@ -600,3 +614,23 @@ footer{
         .form-container button[type="submit"]:hover {
             background-color: #0056b3;
         }
+
+
+/*Admin - services View*/
+
+.divInfoServicesAdmin {
+    margin-top: 15px;
+    margin-right: 15px;
+    display: grid;
+    grid-template: 20% 80%;
+    height: 50px;
+    width: 700px;
+    background: #F5F5F5;
+}
+.displayInfoAdmin {
+    left: 0;
+    width: 1500px;
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 15px;
+}

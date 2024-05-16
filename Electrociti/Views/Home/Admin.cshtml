@@ -1,22 +1,19 @@
 ﻿@using Electrociti.ViewModels
 @model EmployeeServiceEmployeeServices
-
+@{
+    ViewData["Title"] = "Admin";
+}
 <div class="main">
     <div class="filtersAdmin">
-        <form>
-            <label>
-                <input type="radio" name="filter" value="users" checked>
-                Список пользователей
-            </label><br>
-            <label>
-                <input type="radio" name="filter" value="performers">
-                Список исполнителей
-            </label><br>
-            <label>
-                <input type="radio" name="filter" value="services">
-                Список услуг
-            </label>
-        </form>
+        <label>
+            <a asp-controller="Home" asp-action="Admin">Список исполнителей</a>
+        </label><br>
+        <label>
+            <a asp-controller="Home" asp-action="Test">Список пользователей</a>
+        </label><br>
+        <label>
+            <a asp-controller="Home" asp-action="Services">Список услуг</a>
+        </label>
     </div>
     <div class="displayInfo">
         @if (Model != null && Model.Employee != null && Model.Employee.Any())
@@ -31,7 +28,6 @@
                     <img class="imgRate" src="~/img/icons8-star-96.png" />
                     <a class="textRateCard">@employee.EmployeeRate</a>
                     <a class="textPhone">@employee.EmployeePhone</a>
-                    <img class="imgFavorite" src="~/img/icons8-favorite-96-standart.png" onclick="handleClickFavorite" />
                     <div style="flex-direction:column;grid-column:2;grid-row:2">
                         @foreach (var service in Model.EmployeeServices
                        .Join(Model.Services, es => es.ServiceId, s => s.ServiceId, (es, s) => new { es, s })

@@ -12,6 +12,7 @@ using System.Xml.Linq;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Electrociti.Controllers
 {
@@ -30,12 +31,12 @@ namespace Electrociti.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-       
+
         public ViewResult Index(string searchString, int? minCost, int? maxCost, bool rate, int MasterId)
         {
-            
+
             List<Employee> searchResults;
-            if (minCost == null )
+            if (minCost == null)
             {
                 minCost = 1;
             }
@@ -46,7 +47,7 @@ namespace Electrociti.Controllers
             if (string.IsNullOrEmpty(searchString))
             {
                 searchResults = _context.EmployeeService.Where(e => e.Service.ServiceCost >= minCost && e.Service.ServiceCost <= maxCost)
-                    .GroupBy(e => e.Employee.EmployeeId) 
+                    .GroupBy(e => e.Employee.EmployeeId)
                     .Select(e => e.First().Employee)
                     .ToList();
             }
@@ -64,7 +65,7 @@ namespace Electrociti.Controllers
                     .Select(e => e.First().Employee)
                     .ToList();
                 }
-                else 
+                else
                 {
                     searchResults = _context.EmployeeService
                         .Where(e => (e.Employee.EmployeeAddress.Contains(searchString) ||
@@ -86,7 +87,7 @@ namespace Electrociti.Controllers
             };
 
             return View(VM);
-            
+
         }
 
         public IActionResult EP()
@@ -129,17 +130,86 @@ namespace Electrociti.Controllers
         {
             return View();
         }
-        
-        public IActionResult Admin()
+
+        public IActionResult Admin(string searchString, int? minCost, int? maxCost, bool rate, int MasterId)
         {
-            return View();
+            List<Employee> searchResults;
+            if (minCost == null)
+            {
+                minCost = 1;
+            }
+            if (maxCost == null)
+            {
+                maxCost = 999999;
+            }
+            if (string.IsNullOrEmpty(searchString))
+            {
+                searchResults = _context.EmployeeService.Where(e => e.Service.ServiceCost >= minCost && e.Service.ServiceCost <= maxCost)
+                    .GroupBy(e => e.Employee.EmployeeId)
+                    .Select(e => e.First().Employee)
+                    .ToList();
+            }
+            else
+            {
+                if (rate == true)
+                {
+                    searchResults = _context.EmployeeService
+                    .Where(e => (e.Employee.EmployeeAddress.Contains(searchString) ||
+                         e.Employee.EmployeeDescription.Contains(searchString) ||
+                         e.Service.ServiceName.Contains(searchString)) &&
+                        e.Service.ServiceCost >= minCost &&
+                        e.Service.ServiceCost <= maxCost && int.Parse(e.Employee.EmployeeRate) >= 4)
+                    .GroupBy(e => e.Employee.EmployeeId)
+                    .Select(e => e.First().Employee)
+                    .ToList();
+                }
+                else
+                {
+                    searchResults = _context.EmployeeService
+                        .Where(e => (e.Employee.EmployeeAddress.Contains(searchString) ||
+                             e.Employee.EmployeeDescription.Contains(searchString) ||
+                             e.Service.ServiceName.Contains(searchString)) &&
+                            e.Service.ServiceCost >= minCost &&
+                            e.Service.ServiceCost <= maxCost)
+                        .GroupBy(e => e.Employee.EmployeeId)
+                        .Select(e => e.First().Employee)
+                        .ToList();
+                }
+            }
+
+            EmployeeServiceEmployeeServices VM = new EmployeeServiceEmployeeServices
+            {
+                Employee = searchResults,
+                Services = _context.Service.ToList(),
+                EmployeeServices = _context.EmployeeService.ToList(),
+            };
+            return View(VM);
         }
-        
+        public IActionResult Services()
+        {
+            List<Service> services;
+            services = _context.Service.ToList();
+            return View(services);
+        }
+        public IActionResult Employees()
+        {
+            List<Employee> employees;
+            employees = _context.Employee2.ToList();
+            return View(employees);
+        }
+        public IActionResult Test()
+        {
+            List<Employee> employees;
+            employees = _context.Employee2.ToList();
+            return View(employees);
+        }
+
         [HttpGet]
         public IActionResult Login()
         {
 
             int? EmployeeId = HttpContext.Session.GetInt32("EmployeeId");
+            
             if (EmployeeId != null)
             {
                 return View("Index");
@@ -158,7 +228,7 @@ namespace Electrociti.Controllers
             if (employee != null)
             {
                 HttpContext.Session.SetInt32("EmployeeId", employee.EmployeeId);
-                int? E = HttpContext.Session.GetInt32("EmployeeId");
+                HttpContext.Session.SetInt32("EmployeeRole", employee.EmployeeRole);
             }
 
             else
@@ -251,11 +321,11 @@ namespace Electrociti.Controllers
             return View(employee);
         }*/
 
-        private string HashPassword(string password)
-        {
-            string salt = "RandomSalt123";
-            return Convert.ToBase64String(Encoding.UTF8.GetBytes(password + salt));
-        }
+        //private string HashPassword(string password)
+        //{
+        //    string salt = "RandomSalt123";
+        //    return Convert.ToBase64String(Encoding.UTF8.GetBytes(password + salt));
+        //}
 
 
 

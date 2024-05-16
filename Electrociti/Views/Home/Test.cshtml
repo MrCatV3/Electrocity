@@ -1,0 +1,46 @@
+﻿@using Electrociti.Models
+@model List<Employee>
+@{
+    ViewData["Title"] = "Employees";
+}
+<div class="main">
+    <div class="filtersAdmin">
+        <label>
+            <a asp-controller="Home" asp-action="Admin">Список исполнителей</a>
+        </label><br>
+        <label>
+            <a asp-controller="Home" asp-action="Test">Список пользователей</a>
+        </label><br>
+        <label>
+            <a asp-controller="Home" asp-action="Services">Список услуг</a>
+        </label>
+    </div>
+
+    <div class="displayInfo">
+        @if (Model != null && Model.Any())
+        {
+            @foreach (var employee in Model)
+            {
+                @if (employee.EmployeeRole == 3)
+                {
+                    <div class="card">
+                        <img class="imgMaster" src="@employee.EmployeeImage" />
+                        <a class="textNameCard">@employee.EmployeeName</a>
+                        <a class="textDescriptionCard">@employee.EmployeeDescription</a>
+                        <a class="textAddressCard">@employee.EmployeeAddress</a>
+                        <img class="imgRate" src="~/img/icons8-star-96.png" />
+                        <a class="textRateCard">@employee.EmployeeRate</a>
+                        <a class="textPhone">@employee.EmployeePhone</a>
+
+                    </div>
+                }
+            }
+        }
+        else
+        {
+            <div style="background-color:#FFF;">
+                <p style="color:#000; margin-left:20px;">По вашему запросу ничего не найдено</p>
+            </div>
+        }
+    </div>
+</div>

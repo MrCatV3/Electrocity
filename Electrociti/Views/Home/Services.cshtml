@@ -1,0 +1,37 @@
+﻿@using Electrociti.Models
+@model List<Service>
+@{
+    ViewData["Title"] = "Services";
+}
+<div class="main">
+    <div class="filtersAdmin">
+        <label>
+            <a asp-controller="Home" asp-action="Admin">Список исполнителей</a>
+        </label><br>
+        <label>
+            <a asp-controller="Home" asp-action="Test">Список пользователей</a>
+        </label><br>
+        <label>
+            <a asp-controller="Home" asp-action="Services">Список услуг</a>
+        </label>
+    </div>
+
+    <div class="displayInfoAdmin">
+        @if (Model != null && Model.Any())
+        {
+            @foreach (var service in Model)
+            {
+                <div class="divInfoServicesAdmin">
+                    <a class="textNameCardAdmin">Название: @service.ServiceName</a>
+                    <a class="textCostAdmin"> Стоимость: @service.ServiceCost</a>
+                </div>
+            }
+        }
+        else
+        {
+            <div style="background-color:#FFF;">
+                <p style="color:#000; margin-left:20px;">По вашему запросу ничего не найдено</p>
+            </div>
+        }
+    </div>
+</div>
