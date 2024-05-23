@@ -1,0 +1,25 @@
+﻿@{
+    ViewData["Title"] = "EditService";
+}
+@using Electrociti.Models
+@model Service
+
+<form asp-action="EditService" asp-controller="Home" method="post" class="form-container">
+    <div>
+        <div>
+            <h1>Редактирование услуги</h1>
+        </div>
+
+        <div>
+            <input type="text" id="sName" name="ServiceName" placeholder="Название услуги" autocomplete="off" value="@Model.ServiceName" required min="1" />
+        </div>
+
+        <div>
+            <input type="text" id="sCost" name="ServiceCost" placeholder="Стоимость услуги" autocomplete="off" value="@Model.ServiceCost" required min="1" />
+        </div>
+
+        <input type="hidden" name="ServiceId" value="@Model.ServiceId" />
+
+        <button type="submit">Сохранить</button>
+    </div>
+</form>

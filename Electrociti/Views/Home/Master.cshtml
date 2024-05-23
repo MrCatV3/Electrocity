@@ -1,4 +1,7 @@
-﻿@using Electrociti.ViewModels
+﻿@{
+    ViewData["Title"] = "Master";
+}
+@using Electrociti.ViewModels
 @model EmployeeServiceEmployeeServices
 
 
@@ -9,13 +12,14 @@
             <img class="imgMaster" src="@empl.EmployeeImage" />
             <div class="text text-name">@empl.EmployeeName</div>
             <div class="text text-description">@empl.EmployeeDescription</div>
-            <div class="text text-address">@empl.EmployeeAddress</div>
-            <div class="text text-rate">@empl.EmployeeRate</div>
-            <div class="text text-phone">@empl.EmployeePhone</div>
+            <div class="text text-address">Район: @empl.EmployeeAddress</div>
+            <div class="text text-rate">Рейтинг: @empl.EmployeeRate</div>
+            <div class="text text-phone">Телефон @empl.EmployeePhone</div>
+            <div class="text text-phone">Телефон горячей линии 88005553535</div>
 
             @foreach (var serv in Model.Services)
             {
-                <div class="">@serv.ServiceName         @serv.ServiceCost</div>
+                <div class="">@serv.ServiceName        @serv.ServiceCost руб.</div>
             }
         }
     </div>

@@ -1,0 +1,47 @@
+﻿@{
+    ViewData["Title"] = "Редактировать сотрудника";
+}
+@model Electrociti.Models.Employee
+
+<form asp-action="EditMasterAdmin" asp-controller="Home" method="post" class="form-container">
+    <div>
+        <div>
+            <h1>Редактирование сотрудника</h1>
+        </div>
+
+        <div>
+            <input type="text" id="eName" name="EmployeeName" placeholder="Имя сотрудника" autocomplete="off" value="@Model.EmployeeName" required />
+        </div>
+
+        <div>
+            <textarea id="eDescription" name="EmployeeDescription" placeholder="Описание сотрудника" autocomplete="off" required class="textAreaDescription" oninput="autoResize(this)">@Model.EmployeeDescription</textarea>
+        </div>
+
+        <div>
+            <input type="text" id="eAddress" name="EmployeeAddress" placeholder="Адрес сотрудника" autocomplete="off" value="@Model.EmployeeAddress" required />
+        </div>
+              
+        <div>
+            <input type="text" id="ePhone" name="EmployeePhone" placeholder="Телефон сотрудника" autocomplete="off" value="@Model.EmployeePhone" required />
+        </div>
+
+        <input type="hidden" name="EmployeeId" value="@Model.EmployeeId" />
+
+        <button type="submit">Сохранить</button>
+    </div>
+</form>
+
+<script>
+    function autoResize(textarea) {
+        textarea.style.height = 'auto';
+        textarea.style.height = (textarea.scrollHeight) + 'px';
+    }
+
+    // Инициализация высоты textarea при загрузке страницы
+    document.addEventListener('DOMContentLoaded', function () {
+        var textareas = document.querySelectorAll('textarea');
+        textareas.forEach(function (textarea) {
+            autoResize(textarea);
+        });
+    });
+</script>

@@ -9,22 +9,30 @@
             <a asp-controller="Home" asp-action="Admin">Список исполнителей</a>
         </label><br>
         <label>
-            <a asp-controller="Home" asp-action="Test">Список пользователей</a>
-        </label><br>
-        <label>
             <a asp-controller="Home" asp-action="Services">Список услуг</a>
         </label>
     </div>
 
+    
     <div class="displayInfoAdmin">
         @if (Model != null && Model.Any())
         {
+            <button class="buttonAddAdminService" onclick="navigateToForm()"> Добавить новую услугу </button>
             @foreach (var service in Model)
             {
                 <div class="divInfoServicesAdmin">
                     <a class="textNameCardAdmin">Название: @service.ServiceName</a>
                     <a class="textCostAdmin"> Стоимость: @service.ServiceCost</a>
+                    <form class="buttonEditAdminService" id="editForm" method="get" action="/Home/EditService">
+                        <input type="hidden" name="serviceId" id="editServiceId">
+                        <button class="buttonEditAdminService" data-service-id="@service.ServiceId" onclick="confirmActionEdit(event)">edit</button>
+                    </form>
+                    <form class="buttonDeleteAdminService" id="deleteForm" method="post" action="/Home/DeleteService">
+                        <input type="hidden" name="serviceId" id="deleteServiceId">
+                        <button type="button" class="buttonDeleteAdminService" data-service-id="@service.ServiceId" onclick="confirmAction(event)">X</button>
+                    </form>
                 </div>
+                
             }
         }
         else
@@ -33,5 +41,37 @@
                 <p style="color:#000; margin-left:20px;">По вашему запросу ничего не найдено</p>
             </div>
         }
+
     </div>
+
 </div>
+
+<script>
+    function confirmAction(event) 
+    {
+        event.preventDefault();
+        const button = event.target;
+        const serviceId = button.getAttribute('data-service-id');
+
+        if (confirm("Вы уверены, что хотите удалить услугу?")) {
+            console.log("Action confirmed, Service ID:", serviceId);
+            document.getElementById('deleteServiceId').value = serviceId;
+            document.getElementById('deleteForm').submit();
+        } else {
+            console.log("Action canceled");
+        }
+    }
+    function confirmActionEdit(event) 
+    {
+        event.preventDefault();
+        const button = event.target;
+        const serviceId = button.getAttribute('data-service-id');
+        console.log("Action confirmed, Service ID:", serviceId);
+        document.getElementById('editServiceId').value = serviceId;
+        document.getElementById('editForm').submit();
+    }
+    function navigateToForm() 
+    {
+        window.location.href = "/Home/AddService";
+    }
+</script>

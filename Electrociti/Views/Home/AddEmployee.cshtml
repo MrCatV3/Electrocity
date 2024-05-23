@@ -1,0 +1,60 @@
+﻿@{
+    ViewData["Title"] = "AddMaster";
+}
+@using Electrociti.ViewModels
+@model EmployeeServiceEmployeeServices
+
+
+<form asp-action="AddMaster" asp-controller="Home" method="post" class="form-container">
+    <div>
+        <div>
+            <h1>Редактирование сотрудника</h1>
+        </div>
+
+        <div>
+            <input type="text" id="eImg" name="Image" placeholder="Имя сотрудника" autocomplete="off"  required />
+        </div>
+
+        <div>
+            <input type="text" id="eName" name="EmployeeName" placeholder="Имя сотрудника" autocomplete="off" required />
+        </div>
+
+        <div>
+            <input type="text" id="eSecName" name="SecondName" placeholder="Фамилия сотрудника" autocomplete="off"/>
+        </div>
+
+        <div>
+            <input type="text" id="ePatronomic" name="Patronomic" placeholder="Отчество сотрудника" autocomplete="off"/>
+        </div>
+
+        <div>
+            <textarea id="eDescription" name="EmployeeDescription" placeholder="Описание сотрудника" autocomplete="off" required class="textAreaDescription" oninput="autoResize(this)"></textarea>
+        </div>
+
+        <div>
+            <input type="text" id="eAddress" name="EmployeeAddress" placeholder="Адрес сотрудника" autocomplete="off" required />
+        </div>
+
+        <div>
+            <input type="text" id="ePhone" name="EmployeePhone" placeholder="Телефон сотрудника" autocomplete="off" required />
+        </div>
+
+
+        <button type="submit">Сохранить</button>
+    </div>
+</form>
+
+<script>
+    function autoResize(textarea) {
+        textarea.style.height = 'auto';
+        textarea.style.height = (textarea.scrollHeight) + 'px';
+    }
+
+    // Инициализация высоты textarea при загрузке страницы
+    document.addEventListener('DOMContentLoaded', function () {
+        var textareas = document.querySelectorAll('textarea');
+        textareas.forEach(function (textarea) {
+            autoResize(textarea);
+        });
+    });
+</script>

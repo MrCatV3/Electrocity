@@ -134,52 +134,52 @@ namespace Electrociti.Controllers
         public IActionResult Admin(string searchString, int? minCost, int? maxCost, bool rate, int MasterId)
         {
             List<Employee> searchResults;
-            if (minCost == null)
-            {
-                minCost = 1;
-            }
-            if (maxCost == null)
-            {
-                maxCost = 999999;
-            }
-            if (string.IsNullOrEmpty(searchString))
-            {
-                searchResults = _context.EmployeeService.Where(e => e.Service.ServiceCost >= minCost && e.Service.ServiceCost <= maxCost)
-                    .GroupBy(e => e.Employee.EmployeeId)
-                    .Select(e => e.First().Employee)
-                    .ToList();
-            }
-            else
-            {
-                if (rate == true)
-                {
-                    searchResults = _context.EmployeeService
-                    .Where(e => (e.Employee.EmployeeAddress.Contains(searchString) ||
-                         e.Employee.EmployeeDescription.Contains(searchString) ||
-                         e.Service.ServiceName.Contains(searchString)) &&
-                        e.Service.ServiceCost >= minCost &&
-                        e.Service.ServiceCost <= maxCost && int.Parse(e.Employee.EmployeeRate) >= 4)
-                    .GroupBy(e => e.Employee.EmployeeId)
-                    .Select(e => e.First().Employee)
-                    .ToList();
-                }
-                else
-                {
-                    searchResults = _context.EmployeeService
-                        .Where(e => (e.Employee.EmployeeAddress.Contains(searchString) ||
-                             e.Employee.EmployeeDescription.Contains(searchString) ||
-                             e.Service.ServiceName.Contains(searchString)) &&
-                            e.Service.ServiceCost >= minCost &&
-                            e.Service.ServiceCost <= maxCost)
-                        .GroupBy(e => e.Employee.EmployeeId)
-                        .Select(e => e.First().Employee)
-                        .ToList();
-                }
-            }
+            //if (minCost == null)
+            //{
+            //    minCost = 1;
+            //}
+            //if (maxCost == null)
+            //{
+            //    maxCost = 999999;
+            //}
+            //if (string.IsNullOrEmpty(searchString))
+            //{
+            //    searchResults = _context.EmployeeService.Where(e => e.Service.ServiceCost >= minCost && e.Service.ServiceCost <= maxCost)
+            //        .GroupBy(e => e.Employee.EmployeeId)
+            //        .Select(e => e.First().Employee)
+            //        .ToList();
+            //}
+            //else
+            //{
+            //    if (rate == true)
+            //    {
+            //        searchResults = _context.EmployeeService
+            //        .Where(e => (e.Employee.EmployeeAddress.Contains(searchString) ||
+            //             e.Employee.EmployeeDescription.Contains(searchString) ||
+            //             e.Service.ServiceName.Contains(searchString)) &&
+            //            e.Service.ServiceCost >= minCost &&
+            //            e.Service.ServiceCost <= maxCost && int.Parse(e.Employee.EmployeeRate) >= 4)
+            //        .GroupBy(e => e.Employee.EmployeeId)
+            //        .Select(e => e.First().Employee)
+            //        .ToList();
+            //    }
+            //    else
+            //    {
+            //        searchResults = _context.EmployeeService
+            //            .Where(e => (e.Employee.EmployeeAddress.Contains(searchString) ||
+            //                 e.Employee.EmployeeDescription.Contains(searchString) ||
+            //                 e.Service.ServiceName.Contains(searchString)) &&
+            //                e.Service.ServiceCost >= minCost &&
+            //                e.Service.ServiceCost <= maxCost)
+            //            .GroupBy(e => e.Employee.EmployeeId)
+            //            .Select(e => e.First().Employee)
+            //            .ToList();
+            //    }
+            //}
 
             EmployeeServiceEmployeeServices VM = new EmployeeServiceEmployeeServices
             {
-                Employee = searchResults,
+                Employee = searchResults = _context.Employee2.ToList(),
                 Services = _context.Service.ToList(),
                 EmployeeServices = _context.EmployeeService.ToList(),
             };
@@ -187,9 +187,134 @@ namespace Electrociti.Controllers
         }
         public IActionResult Services()
         {
+
             List<Service> services;
             services = _context.Service.ToList();
             return View(services);
+        }
+        [HttpPost]
+        public IActionResult DeleteService(int serviceId)
+        {
+            var service = _context.Service.Find(serviceId);
+            if (service != null)
+            {
+                _context.Service.Remove(service);
+                _context.SaveChanges();
+            }
+            return RedirectToAction("Services");
+        }
+        [HttpGet]
+        public IActionResult EditService(int serviceId)
+        {
+            Service service1 = _context.Service.Find(serviceId);
+            return View(service1);
+        }
+        [HttpPost]
+        public IActionResult EditService(Service updateService)
+        {
+            var existingService = _context.Service.Find(updateService.ServiceId);
+            if (existingService != null)
+            {
+                existingService.ServiceName = updateService.ServiceName;
+                existingService.ServiceCost = updateService.ServiceCost;
+
+                _context.SaveChanges();
+                return RedirectToAction("Services");
+            }
+            return View(existingService);
+
+        }
+        [HttpGet]
+        public IActionResult AddService()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult AddService(string ServiceName, int ServiceCost)
+        {
+            Service newService = new Service();
+            newService.ServiceName = ServiceName;
+            newService.ServiceCost = ServiceCost;
+            _context.Service.Add(newService);
+            _context.SaveChanges();
+            return RedirectToAction("Services");
+        }
+        [HttpGet]
+        public IActionResult AddMaster()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult AddMaster(string Image,string EmployeeName, string SecondName, string Patronomic, string EmployeeDescription, string EmployeeAddress, string EmployeePhone)
+        {
+            Employee newEmployee = new Employee();
+            newEmployee.EmployeeName = EmployeeName;
+            newEmployee.EmployeeSurname = SecondName;
+            newEmployee.EmployeePatronomic = Patronomic;
+            newEmployee.EmployeeDescription = EmployeeDescription;
+            newEmployee.EmployeeAddress = EmployeeAddress;
+            newEmployee.EmployeePhone = EmployeePhone;
+            _context.Add(newEmployee);
+            _context.SaveChanges();
+            return RedirectToAction("Admin");
+        }
+        [HttpPost]
+        public IActionResult DeleteMaster(int employeeId)
+        {
+            var employee = _context.Employee2.Find(employeeId);
+            if (employee != null)
+            {
+                _context.Employee2.Remove(employee);
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("Admin");
+        }
+        [HttpGet]
+        public IActionResult EditMaster(int EmployeeId)
+        {
+            var employeeServices = _context.EmployeeService
+            .Include(es => es.Service)
+            .Where(es => es.EmployeeId == EmployeeId)
+            .ToList();
+
+            var employee = _context.Employee2.Where(e => e.EmployeeId == EmployeeId).ToList();
+
+            EmployeeServiceEmployeeServices VM = new EmployeeServiceEmployeeServices
+            {
+                Employee = employee,
+                Services = employeeServices.Select(es => es.Service).ToList(),
+                EmployeeServices = employeeServices
+            };
+
+            return View(VM);
+        }
+        [HttpPost]
+        public IActionResult EditMaster()
+        {
+            return View();
+        }
+        [HttpGet]
+        public IActionResult EditMasterAdmin(int employeeId)
+        {
+            Employee employee = _context.Employee2.Find(employeeId);
+            return View(employee);
+        }
+        [HttpPost]
+        public IActionResult EditMasterAdmin(Employee updateEmployee)
+        {
+            var existingEmployee = _context.Employee2.Find(updateEmployee.EmployeeId);
+            if (existingEmployee != null)
+            {
+                existingEmployee.EmployeeName = updateEmployee.EmployeeName;
+                existingEmployee.EmployeeDescription = updateEmployee.EmployeeDescription;
+                existingEmployee.EmployeeAddress = updateEmployee.EmployeeAddress;
+                existingEmployee.EmployeePhone = updateEmployee.EmployeePhone;
+
+                _context.SaveChanges();
+                return RedirectToAction("Admin");
+            }
+            return View(existingEmployee);
         }
         public IActionResult Employees()
         {
@@ -295,38 +420,9 @@ namespace Electrociti.Controllers
 
         }
 
-        public IActionResult Register()
-        {
-            return View();
-        }
+        
 
-        /*[HttpPost]
-        public ActionResult Register(Employee employee)
-        {
-            if (ModelState.IsValid)
-            {
-                using (var context = new ApplicationContext())
-                {
-                    if (context.Employee.Any(u => u.EmployeeName == employee.EmployeeName))
-                    {
-                        ModelState.AddModelError("Username", "Пользователь с таким именем уже существует.");
-                        return View(employee);
-                    }
-                    employee.EmployeePassword = HashPassword(employee.EmployeePassword);
-                    context.Employee.Add(employee);
-                    context.SaveChanges();
-                    return RedirectToAction("Index", "Home");
-                }
-            }
-            return View(employee);
-        }*/
-
-        //private string HashPassword(string password)
-        //{
-        //    string salt = "RandomSalt123";
-        //    return Convert.ToBase64String(Encoding.UTF8.GetBytes(password + salt));
-        //}
-
+       
 
 
         

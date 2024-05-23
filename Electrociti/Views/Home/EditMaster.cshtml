@@ -1,0 +1,44 @@
+﻿@{
+    ViewData["Title"] = "EditMaster";
+}
+@using Electrociti.ViewModels
+@model EmployeeServiceEmployeeServices
+
+
+<div class="main">
+    <div class="profile-card">
+        @foreach (var empl in Model.Employee)
+        {
+            <input type="hidden" name="EmployeeId" value="@empl.EmployeeId" />
+            <img class="imgMaster" src="@empl.EmployeeImage" />
+            <div class="text text-name">@empl.EmployeeName</div>
+            <div class="text text-description">@empl.EmployeeDescription</div>
+            <div class="text text-address">Район: @empl.EmployeeAddress</div>
+            <div class="text text-rate">Рейтинг: @empl.EmployeeRate</div>
+            <div class="text text-phone">Телефон @empl.EmployeePhone</div>
+            //<div class="text text-phone">Телефон горячей линии 88005553535</div>
+
+            @foreach (var serv in Model.Services)
+            {
+                <div class="">@serv.ServiceName        @serv.ServiceCost руб.</div>
+            }
+
+            <form id="deleteForm-@empl.EmployeeId" asp-controller="Home" asp-action="DeleteMaster" method="post">
+                <input type="hidden" name="employeeId" value="@empl.EmployeeId" />
+                <button type="button" class="buttonExit" onclick="confirmDelete('@empl.EmployeeId')">Удалить</button>
+            </form>
+            <form asp-controller="Home" asp-action="EditMasterAdmin" method="get">
+                <input type="hidden" name="employeeId" value="@empl.EmployeeId" />
+                <button class="buttonEdit" type="submit">Редактировать</button>
+            </form>
+        }
+    </div>
+</div>
+
+<script>
+    function confirmDelete(employeeId) {
+        if (confirm("Вы уверены, что хотите удалить этого сотрудника?")) {
+            document.getElementById('deleteForm-' + employeeId).submit();
+        }
+    }
+</script>
