@@ -8,11 +8,11 @@
 <form asp-action="AddMaster" asp-controller="Home" method="post" class="form-container">
     <div>
         <div>
-            <h1>Редактирование сотрудника</h1>
+            <h1>Добавление сотрудника</h1>
         </div>
 
         <div>
-            <input type="text" id="eImg" name="Image" placeholder="Имя сотрудника" autocomplete="off"  required />
+            <input type="text" id="eImg" name="Image" placeholder="Вставьте картинку" autocomplete="off"  required />
         </div>
 
         <div>
@@ -39,6 +39,10 @@
             <input type="text" id="ePhone" name="EmployeePhone" placeholder="Телефон сотрудника" autocomplete="off" required />
         </div>
 
+        <div>
+            <p>Дата рождения</p>
+            <input type="date" id="eDate" name="SelectDate" max="@ViewBag.Today"/>
+        </div>
 
         <button type="submit">Сохранить</button>
     </div>

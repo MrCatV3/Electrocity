@@ -101,8 +101,19 @@ namespace Electrociti.Controllers
             {
                 return View("Login");
             }
-            Employee? employee = _context.Employee2.Where(e => e.EmployeeId == EmployeeId).FirstOrDefault();
-            return View("EmployeeProfile", employee);
+            var employeeServices = _context.EmployeeService
+            .Include(es => es.Service)
+            .Where(es => es.EmployeeId == EmployeeId)
+            .ToList();
+            EmployeeServiceEmployeeServices VM = new EmployeeServiceEmployeeServices
+            {
+                Employee = _context.Employee2.Where(e => e.EmployeeId == EmployeeId).ToList(),
+                Services = employeeServices.Select(es => es.Service).ToList(),
+                EmployeeServices = _context.EmployeeService.ToList(),
+                Works = _context.EmployeeWork.Where(e => e.EmployeeId == EmployeeId).ToList(),
+            };
+
+            return View("EmployeeProfile", VM);
         }
         [HttpGet]
         public IActionResult Master(int EmployeeId)
@@ -118,7 +129,7 @@ namespace Electrociti.Controllers
             {
                 Employee = employee,
                 Services = employeeServices.Select(es => es.Service).ToList(),
-                EmployeeServices = employeeServices
+                EmployeeServices = employeeServices,
             };
 
             return View(VM);
@@ -203,6 +214,34 @@ namespace Electrociti.Controllers
             }
             return RedirectToAction("Services");
         }
+        [HttpPost]
+        public IActionResult DeleteEmployeeService(int employeeId, int serviceId)
+        {
+            //var employeeService = _context.Service.Find(employeeServiceId);
+            //if (employeeService != null)
+            //{
+            //    _context.Service.Remove(employeeService);
+            //    _context.SaveChanges();
+            //}
+            //return RedirectToAction("EmployeeProfile");
+            var employeeService = _context.EmployeeService
+            .FirstOrDefault(es => es.EmployeeId == employeeId && es.ServiceId == serviceId);
+
+            if (employeeService != null)
+            {
+                _context.EmployeeService.Remove(employeeService);
+                _context.SaveChanges();
+            }
+            int? EmployeeRole = HttpContext.Session.GetInt32("EmployeeRole");
+            if (EmployeeRole == 2)
+            {
+                return RedirectToAction("EmployeeProfile");
+            }
+            else
+            {
+                return RedirectToAction("Admin");
+            }
+        }
         [HttpGet]
         public IActionResult EditService(int serviceId)
         {
@@ -245,8 +284,10 @@ namespace Electrociti.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult AddMaster(string Image,string EmployeeName, string SecondName, string Patronomic, string EmployeeDescription, string EmployeeAddress, string EmployeePhone)
+        public IActionResult AddMaster(string Image, string EmployeeName, string SecondName, string Patronomic, string EmployeeDescription, string EmployeeAddress, string EmployeePhone, DateTime SelectedDate)
         {
+            DateTime today = DateTime.Today;
+            ViewBag.Today = today.ToString("yyyy-MM-dd");
             Employee newEmployee = new Employee();
             newEmployee.EmployeeName = EmployeeName;
             newEmployee.EmployeeSurname = SecondName;
@@ -254,6 +295,9 @@ namespace Electrociti.Controllers
             newEmployee.EmployeeDescription = EmployeeDescription;
             newEmployee.EmployeeAddress = EmployeeAddress;
             newEmployee.EmployeePhone = EmployeePhone;
+            newEmployee.EmployeeRole = 2;
+            newEmployee.EmployeeRegistrationDate = DateTime.Now;
+            newEmployee.EmployeeBirthday = SelectedDate;
             _context.Add(newEmployee);
             _context.SaveChanges();
             return RedirectToAction("Admin");
@@ -306,7 +350,10 @@ namespace Electrociti.Controllers
             var existingEmployee = _context.Employee2.Find(updateEmployee.EmployeeId);
             if (existingEmployee != null)
             {
+                existingEmployee.EmployeeImage = updateEmployee.EmployeeImage;
                 existingEmployee.EmployeeName = updateEmployee.EmployeeName;
+                existingEmployee.EmployeeSurname = updateEmployee.EmployeeSurname;
+                existingEmployee.EmployeePatronomic = updateEmployee.EmployeePatronomic;
                 existingEmployee.EmployeeDescription = updateEmployee.EmployeeDescription;
                 existingEmployee.EmployeeAddress = updateEmployee.EmployeeAddress;
                 existingEmployee.EmployeePhone = updateEmployee.EmployeePhone;
@@ -334,20 +381,20 @@ namespace Electrociti.Controllers
         {
 
             int? EmployeeId = HttpContext.Session.GetInt32("EmployeeId");
-            
+
             if (EmployeeId != null)
             {
                 return View("Index");
             }
-            else 
-            { 
-                return View(); 
+            else
+            {
+                return View();
             }
         }
 
         [HttpPost]
         public IActionResult Login(string login, string password)
-            {
+        {
             var employeeService = new EmployeeServiceLogin(_context);
             var employee = employeeService.GetEmployee(login, password);
             if (employee != null)
@@ -376,7 +423,7 @@ namespace Electrociti.Controllers
             }
             else
             {
-                
+
                 return View();
             }
         }
@@ -419,12 +466,71 @@ namespace Electrociti.Controllers
             return View(updatedEmployee);
 
         }
+        [HttpPost]
+        public IActionResult AddEmployeeService(int selectedServiceId, int employeeId)
+        {
+            EmployeeService employeeService = new()
+            {
+                EmployeeId = employeeId,
+                ServiceId = selectedServiceId
+            };
 
-        
+            _context.EmployeeService.Add(employeeService);
+            _context.SaveChanges();
+            int? EmployeeRole = HttpContext.Session.GetInt32("EmployeeRole");
+            if (EmployeeRole == 2)
+            {
+                return RedirectToAction("EmployeeProfile");
+            }
+            else
+            {
+                return RedirectToAction("Admin");
+            }
+        }
+        [HttpGet]
+        public IActionResult AddEmployeeService(int employeeId)
+        {
+            var services = _context.Service.ToList();
 
-       
+            ViewBag.EmployeeId = employeeId;
+            return View(services);
+        }
+        [HttpGet]
+        public IActionResult AddEmployee()
+        {
+            DateTime today = DateTime.Today;
+            ViewBag.Today = today.ToString("yyyy-MM-dd");
+
+            return View();
+        }
+        [HttpGet]
+        public IActionResult AddEmployeeWork(int employeeId)
+        {
+            ViewBag.EmployeeId = employeeId;
+            DateTime today = DateTime.Today;
+            ViewBag.Today = today.ToString("yyyy-MM-dd");
+            return View();
+        }
+        [HttpPost]
+        public IActionResult AddEmployeeWork(string EmployeeWorkAdress, string EmployeeWorkPhone, string EmployeeWorkName, string EmployeeWorkTime, DateTime SelectDate, int employeeId)
+        {
+            EmployeeWork employeeWork = new()
+            {
+                EmployeeWorkDate = SelectDate,
+                EmployeeWorkTime = EmployeeWorkTime,
+                EmployeeWorkAdress = EmployeeWorkAdress,
+                EmployeeWorkPhone = EmployeeWorkPhone,
+                EmployeeWorkName = EmployeeWorkName,
+                EmployeeId = employeeId
+            };
+            _context.Add(employeeWork);
+            _context.SaveChanges();
+
+            return RedirectToAction("Admin");
+        }
 
 
-        
+
+
     }
 }

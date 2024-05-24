@@ -1,0 +1,15 @@
+﻿@{
+    ViewData["Title"] = "AddEmployeeService";
+}
+@using Electrociti.Models
+@model List<Service>
+<form asp-action="AddEmployeeService" asp-controller="Home" method="post">
+    <input type="hidden" name="employeeId" value="@ViewBag.EmployeeId" />
+    <select class="comboboxFilterAge" id="combobox" name="selectedServiceId">
+        @foreach (var serv in Model)
+        {
+            <option value="@serv.ServiceId">@serv.ServiceName</option>
+        }
+    </select>
+    <button type="submit">Сохранить</button>
+</form>

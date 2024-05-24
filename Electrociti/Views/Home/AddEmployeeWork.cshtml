@@ -1,0 +1,26 @@
+﻿@{
+    ViewData["Title"] = "AddEmployeeWork";
+}
+
+
+<form asp-action="AddEmployeeWork" asp-controller="Home" method="post" class="form-container">
+    <div>
+        <input type="text" id="eName" name="EmployeeWorkName" placeholder="Имя клиента" min="1" required/>
+    </div>
+
+    <div>
+        <input type="text" id="ePhone" name="EmployeeWorkPhone" placeholder="Телефон клиента" min="1" required />
+    </div>
+
+    <div>
+        <input type="text" id="eAddress" name="EmployeeWorkAdress" placeholder="Адрес клиента" min="1" required />
+    </div>
+    <div>
+        <input type="text" id="eTime" name="EmployeeWorkTime" placeholder="Время записи" min="1"  required />
+    </div>
+    <div>
+        <input type="date" id="eDate" name="SelectDate" min="@ViewBag.Today" required/>
+    </div>
+    <input type="hidden" name="employeeId" value="@ViewBag.EmployeeId" />
+    <button type="submit">Сохранить</button>
+</form>

@@ -20,7 +20,14 @@
 
             @foreach (var serv in Model.Services)
             {
-                <div class="">@serv.ServiceName        @serv.ServiceCost руб.</div>
+                <div style ="display: flex;">
+                    <div style="margin-top: 11px;">@serv.ServiceName        @serv.ServiceCost руб.</div>
+                    <form asp-controller="Home" asp-action="DeleteEmployeeService" style="margin: 10px;" method="post">
+                        <input type="hidden" name="employeeId" value="@empl.EmployeeId" />
+                        <input type="hidden" name="serviceId" value="@serv.ServiceId" />
+                        <button type="submit" class="buttonDeleteAdminEmployeeService">X</button>
+                    </form>
+                </div>
             }
 
             <form id="deleteForm-@empl.EmployeeId" asp-controller="Home" asp-action="DeleteMaster" method="post">
@@ -31,11 +38,33 @@
                 <input type="hidden" name="employeeId" value="@empl.EmployeeId" />
                 <button class="buttonEdit" type="submit">Редактировать</button>
             </form>
+            <form asp-controller="Home" asp-action="AddEmployeeWork" method="get">
+                <input type="hidden" name="employeeId" value="@empl.EmployeeId" />
+                <button class="buttonEdit">Добавить запись</button>
+            </form>
+            <form asp-controller="Home" asp-action="AddEmployeeService" method="get">
+                <input type="hidden" name="employeeId" value="@empl.EmployeeId" />
+                <button class="buttonEdit">Добавить услугу</button>
+            </form>
         }
     </div>
 </div>
 
 <script>
+    function confirmAction(event) {
+        event.preventDefault();
+        const button = event.target;
+        const serviceId = button.getAttribute('data-service-id');
+
+        if (confirm("Вы уверены, что хотите удалить услугу?")) {
+            console.log("Action confirmed, Service ID:", serviceId);
+            document.getElementById('deleteServiceId').value = serviceId;
+            document.getElementById('deleteServiceId').value = serviceId;
+            document.getElementById('deleteForm').submit();
+        } else {
+            console.log("Action canceled");
+        }
+    }
     function confirmDelete(employeeId) {
         if (confirm("Вы уверены, что хотите удалить этого сотрудника?")) {
             document.getElementById('deleteForm-' + employeeId).submit();

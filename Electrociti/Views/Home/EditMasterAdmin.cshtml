@@ -4,13 +4,25 @@
 @model Electrociti.Models.Employee
 
 <form asp-action="EditMasterAdmin" asp-controller="Home" method="post" class="form-container">
-    <div>
+    <>
         <div>
             <h1>Редактирование сотрудника</h1>
         </div>
 
         <div>
-            <input type="text" id="eName" name="EmployeeName" placeholder="Имя сотрудника" autocomplete="off" value="@Model.EmployeeName" required />
+            <input type="text" id="eImg" name="Image" placeholder="Вставьте картинку" value="@Model.EmployeeImage" required />
+        </div>
+
+        <div>
+            <input type="text" id="eName" name="EmployeeName" placeholder="Имя сотрудника" value="@Model.EmployeeName" required />
+        </div>
+
+        <div>
+            <input type="text" id="eSecName" name="SecondName" placeholder="Фамилия сотрудника" value="@Model.EmployeeSurname" autocomplete="off" />
+        </div>
+
+        <div>
+            <input type="text" id="ePatronomic" name="Patronomic" placeholder="Отчество сотрудника" value="@Model.EmployeePatronomic" autocomplete="off" />
         </div>
 
         <div>

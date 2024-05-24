@@ -2,22 +2,48 @@
     ViewData["Title"] = "EmployeeProfile";
 }
 @using Electrociti.ViewModels
-@model Employee
+@model EmployeeServiceEmployeeServices
 
 
-<div class="profile-card">
-    <img class="imgMaster" src="@Model.EmployeeImage" />
-    <div class="text text-name">@Model.EmployeeName</div>
-    <div class="text text-description">@Model.EmployeeDescription</div>
-    <div class="text text-address">@Model.EmployeeAddress</div>
-    <div class="text text-rate">@Model.EmployeeRate</div>
-    <div class="text text-phone">@Model.EmployeePhone</div>
-    <div class="containerButtonProfile">
-        <form asp-controller="Home" asp-action="Logout" method="post">
-        <button class="buttonExit" type="submit">Выход</button>
-    </form>
-        <form asp-controller="Home" asp-action="UpdateEmployeeProfile" method="get">
-        <button class="buttonEdit" type="submit">Редактировать</button>
-    </form>
+<div class="main">
+    <div class="profile-card">
+        @foreach (var empl in Model.Employee)
+        {
+            <input type="hidden" name="EmployeeId" value="@empl.EmployeeId" />
+            <img class="imgMaster" src="@empl.EmployeeImage" />
+            <div class="text text-name">@empl.EmployeeName</div>
+            <div class="text text-description">@empl.EmployeeDescription</div>
+            <div class="text text-address">Район: @empl.EmployeeAddress</div>
+            <div class="text text-rate">Рейтинг: @empl.EmployeeRate</div>
+            <div class="text text-phone">Телефон @empl.EmployeePhone</div>
+            <div class="text text-phone">Телефон горячей линии 88005553535</div>
+
+            @foreach (var serv in Model.Services)
+            {
+                <div class="">@serv.ServiceName        @serv.ServiceCost руб.</div>
+            }
+
+            <form asp-controller="Home" asp-action="Logout" method="post">
+                <button class="buttonExit" type="submit">Выход</button>
+            </form>
+            <form asp-controller="Home" asp-action="EditMaster" method="get">
+                <input type="hidden" name="employeeId" value="@empl.EmployeeId" />
+                <button class="buttonEdit" type="submit">Редактировать</button>
+            </form>
+            
+            @foreach (var work in Model.Works)
+            {
+                @if (work.EmployeeWorkDate > DateTime.Now)
+                {
+                    <div class="">Номер заказа #@work.EmployeeWorkId</div>
+                    <div class="">Дата выезда: @work.EmployeeWorkDate.ToString("dd.MM.yyyy") - @work.EmployeeWorkTime</div>
+                    <div class="">Номер телефона клиента: @work.EmployeeWorkPhone</div>
+                    <div class="">Адрес клиента: @work.EmployeeWorkAdress</div>
+                    <div class="">Имя клиента: @work.EmployeeWorkName</div>
+                }
+            }
+        }
     </div>
 </div>
+
+

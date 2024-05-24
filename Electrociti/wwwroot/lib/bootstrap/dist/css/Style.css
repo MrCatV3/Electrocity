@@ -228,7 +228,6 @@ footer{
     background: #214DA3;
     color: #FFF;
     margin-top: 20px;
-    margin-left: 10px;
     font-family: Inter;
     font-size: 20px;
     font-style: normal;
@@ -660,6 +659,9 @@ footer{
 .buttonDeleteAdminService {
     color: red;
     width: 700px;
+}
+.buttonDeleteAdminEmployeeService {
+    color: red;
 }
 
 

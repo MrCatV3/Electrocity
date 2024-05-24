@@ -14,7 +14,7 @@ namespace Electrociti.Models
         public DbSet<Purchase> Purchases2 { get; set; }
         public DbSet<EmployeeService> EmployeeService { get; set; }
         public DbSet<CommentEmployee> CommentEmployees2 { get; set; }
-
+        public DbSet<EmployeeWork> EmployeeWork { get; set; }
         public ApplicationContext()
         {
         }
