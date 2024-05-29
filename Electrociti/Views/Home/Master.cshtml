@@ -5,22 +5,35 @@
 @model EmployeeServiceEmployeeServices
 
 
-<div class="main">
-    <div class="profile-card">
-        @foreach (var empl in Model.Employee)
-        {
-            <img class="imgMaster" src="@empl.EmployeeImage" />
+<div style="max-width: 800px;
+    width: 100%;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 20px;
+    box-sizing: border-box;
+    text-align: center;
+    margin-left:530px;
+    margin-top:20px;
+    margin-bottom:20px;">
+    @foreach (var empl in Model.Employee)
+    {
+        <div class="profile-container">
+            <img class="img-master" src="@empl.EmployeeImage" alt="@empl.EmployeeName" />
             <div class="text text-name">@empl.EmployeeName</div>
             <div class="text text-description">@empl.EmployeeDescription</div>
             <div class="text text-address">Район: @empl.EmployeeAddress</div>
             <div class="text text-rate">Рейтинг: @empl.EmployeeRate</div>
-            <div class="text text-phone">Телефон @empl.EmployeePhone</div>
-            <div class="text text-phone">Телефон горячей линии 88005553535</div>
+            <div class="text text-phone">Телефон: @empl.EmployeePhone</div>
+            <div class="text text-hotline">Телефон горячей линии: 88005553535</div>
 
-            @foreach (var serv in Model.Services)
-            {
-                <div class="">@serv.ServiceName        @serv.ServiceCost руб.</div>
-            }
-        }
-    </div>
+            <div class="services">
+                <div class="services-title">Услуги</div>
+                @foreach (var serv in Model.Services)
+                {
+                    <div class="service-item">@serv.ServiceName - @serv.ServiceCost руб.</div>
+                }
+            </div>
+        </div>
+    }
 </div>

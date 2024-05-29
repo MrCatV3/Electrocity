@@ -5,8 +5,18 @@
 @model EmployeeServiceEmployeeServices
 
 
-<div class="main">
-    <div class="profile-card">
+<div style="max-width: 800px;
+    width: 100%;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 20px;
+    box-sizing: border-box;
+    text-align: center;
+    margin-left:530px;
+    margin-top:20px;
+    margin-bottom:20px;">
+    <div class="profile-container">
         @foreach (var empl in Model.Employee)
         {
             <input type="hidden" name="EmployeeId" value="@empl.EmployeeId" />
@@ -17,31 +27,39 @@
             <div class="text text-rate">Рейтинг: @empl.EmployeeRate</div>
             <div class="text text-phone">Телефон @empl.EmployeePhone</div>
             <div class="text text-phone">Телефон горячей линии 88005553535</div>
-
-            @foreach (var serv in Model.Services)
-            {
-                <div class="">@serv.ServiceName        @serv.ServiceCost руб.</div>
-            }
-
             <form asp-controller="Home" asp-action="Logout" method="post">
-                <button class="buttonExit" type="submit">Выход</button>
+                <button class="button button-exit" type="submit">Выход</button>
             </form>
             <form asp-controller="Home" asp-action="EditMaster" method="get">
                 <input type="hidden" name="employeeId" value="@empl.EmployeeId" />
-                <button class="buttonEdit" type="submit">Редактировать</button>
+                <button class="button button-edit" type="submit">Редактировать</button>
             </form>
-            
-            @foreach (var work in Model.Works)
-            {
-                @if (work.EmployeeWorkDate > DateTime.Now)
+            <div class="services">
+                <div class="services-title">Услуги</div>
+                @foreach (var serv in Model.Services)
                 {
-                    <div class="">Номер заказа #@work.EmployeeWorkId</div>
-                    <div class="">Дата выезда: @work.EmployeeWorkDate.ToString("dd.MM.yyyy") - @work.EmployeeWorkTime</div>
-                    <div class="">Номер телефона клиента: @work.EmployeeWorkPhone</div>
-                    <div class="">Адрес клиента: @work.EmployeeWorkAdress</div>
-                    <div class="">Имя клиента: @work.EmployeeWorkName</div>
+                    <div class="service-item">@serv.ServiceName        @serv.ServiceCost руб.</div>
                 }
-            }
+            </div>
+
+            
+
+            <div class="work-schedule">
+                <div class="work-schedule-title">Рабочее время</div>
+                @foreach (var work in Model.Works)
+                {
+                    @if (work.EmployeeWorkDate > DateTime.Now)
+                    {
+                        <div class="work-item">
+                            <div class="work-order">Номер заказа #@work.EmployeeWorkId</div>
+                            <div class="work-date">Дата выезда: @work.EmployeeWorkDate.ToString("dd.MM.yyyy") - @work.EmployeeWorkTime</div>
+                            <div class="work-phone">Номер телефона клиента: @work.EmployeeWorkPhone</div>
+                            <div class="work-address">Адрес клиента: @work.EmployeeWorkAdress</div>
+                            <div class="work-name">Имя клиента: @work.EmployeeWorkName</div>
+                        </div>
+                    }
+                }
+            </div>
         }
     </div>
 </div>

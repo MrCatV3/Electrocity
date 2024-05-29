@@ -32,10 +32,15 @@ namespace Electrociti.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public ViewResult Index(string searchString, int? minCost, int? maxCost, bool rate, int MasterId)
+        public IActionResult Index(string searchString, int? minCost, int? maxCost, bool rate, int MasterId)
         {
 
             List<Employee> searchResults;
+            int? EmployeeRole = HttpContext.Session.GetInt32("EmployeeRole");
+            if (EmployeeRole == 1)
+            {
+                return RedirectToAction("Admin");
+            }
             if (minCost == null)
             {
                 minCost = 1;
@@ -217,13 +222,7 @@ namespace Electrociti.Controllers
         [HttpPost]
         public IActionResult DeleteEmployeeService(int employeeId, int serviceId)
         {
-            //var employeeService = _context.Service.Find(employeeServiceId);
-            //if (employeeService != null)
-            //{
-            //    _context.Service.Remove(employeeService);
-            //    _context.SaveChanges();
-            //}
-            //return RedirectToAction("EmployeeProfile");
+            
             var employeeService = _context.EmployeeService
             .FirstOrDefault(es => es.EmployeeId == employeeId && es.ServiceId == serviceId);
 

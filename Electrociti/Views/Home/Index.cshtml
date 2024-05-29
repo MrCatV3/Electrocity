@@ -34,6 +34,7 @@
     </div>
     
     <div class="cards">
+        
         @if (Model != null && Model.Employee != null && Model.Employee.Any())
         {
             @foreach (var employee in Model.Employee.Where(e => e.EmployeeRole == 2))

@@ -12,7 +12,7 @@
             <a asp-controller="Home" asp-action="Services">Список услуг</a>
         </label>
     </div>
-    <div class="displayInfo">
+    <div class="cards">
         @if (Model != null && Model.Employee != null && Model.Employee.Any())
         {
             <button class="buttonAddAdminEmployee" onclick="navigateToForm()"> Добавить нового исполнителя </button>

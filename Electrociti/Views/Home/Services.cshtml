@@ -23,13 +23,13 @@
                 <div class="divInfoServicesAdmin">
                     <a class="textNameCardAdmin">Название: @service.ServiceName</a>
                     <a class="textCostAdmin"> Стоимость: @service.ServiceCost</a>
-                    <form class="buttonEditAdminService" id="editForm" method="get" action="/Home/EditService">
+                    <form id="editForm" method="get" action="/Home/EditService">
                         <input type="hidden" name="serviceId" id="editServiceId">
-                        <button class="buttonEditAdminService" data-service-id="@service.ServiceId" onclick="confirmActionEdit(event)">edit</button>
+                        <button class="buttonEditAdminService" data-service-id="@service.ServiceId" onclick="confirmActionEdit(event)">Редактировать услугу</button>
                     </form>
-                    <form class="buttonDeleteAdminService" id="deleteForm" method="post" action="/Home/DeleteService">
+                    <form  id="deleteForm" method="post" action="/Home/DeleteService">
                         <input type="hidden" name="serviceId" id="deleteServiceId">
-                        <button type="button" class="buttonDeleteAdminService" data-service-id="@service.ServiceId" onclick="confirmAction(event)">X</button>
+                        <button type="button" class="buttonDeleteAdminService" data-service-id="@service.ServiceId" onclick="confirmAction(event)">Удалить услугу</button>
                     </form>
                 </div>
                 

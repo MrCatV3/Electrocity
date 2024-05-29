@@ -3,9 +3,12 @@
 }
 @using Electrociti.Models
 @model List<Service>
-<form asp-action="AddEmployeeService" asp-controller="Home" method="post">
+<form asp-action="AddEmployeeService" asp-controller="Home" method="post" class="form-container">
+    <div>
+        <h1>Связь услуги с выбранным работником</h1>
+    </div>
     <input type="hidden" name="employeeId" value="@ViewBag.EmployeeId" />
-    <select class="comboboxFilterAge" id="combobox" name="selectedServiceId">
+    <select class="comboboxFilterService" id="combobox" name="selectedServiceId">
         @foreach (var serv in Model)
         {
             <option value="@serv.ServiceId">@serv.ServiceName</option>

@@ -5,8 +5,18 @@
 @model EmployeeServiceEmployeeServices
 
 
-<div class="main">
-    <div class="profile-card">
+<div style="max-width: 800px;
+    width: 100%;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 20px;
+    box-sizing: border-box;
+    text-align: center;
+    margin-left:530px;
+    margin-top:20px;
+    margin-bottom:20px;">
+    <div class="profile-container">
         @foreach (var empl in Model.Employee)
         {
             <input type="hidden" name="EmployeeId" value="@empl.EmployeeId" />
@@ -16,36 +26,39 @@
             <div class="text text-address">Район: @empl.EmployeeAddress</div>
             <div class="text text-rate">Рейтинг: @empl.EmployeeRate</div>
             <div class="text text-phone">Телефон @empl.EmployeePhone</div>
-            //<div class="text text-phone">Телефон горячей линии 88005553535</div>
-
-            @foreach (var serv in Model.Services)
-            {
-                <div style ="display: flex;">
-                    <div style="margin-top: 11px;">@serv.ServiceName        @serv.ServiceCost руб.</div>
-                    <form asp-controller="Home" asp-action="DeleteEmployeeService" style="margin: 10px;" method="post">
-                        <input type="hidden" name="employeeId" value="@empl.EmployeeId" />
-                        <input type="hidden" name="serviceId" value="@serv.ServiceId" />
-                        <button type="submit" class="buttonDeleteAdminEmployeeService">X</button>
-                    </form>
-                </div>
-            }
-
-            <form id="deleteForm-@empl.EmployeeId" asp-controller="Home" asp-action="DeleteMaster" method="post">
-                <input type="hidden" name="employeeId" value="@empl.EmployeeId" />
-                <button type="button" class="buttonExit" onclick="confirmDelete('@empl.EmployeeId')">Удалить</button>
-            </form>
-            <form asp-controller="Home" asp-action="EditMasterAdmin" method="get">
-                <input type="hidden" name="employeeId" value="@empl.EmployeeId" />
-                <button class="buttonEdit" type="submit">Редактировать</button>
-            </form>
-            <form asp-controller="Home" asp-action="AddEmployeeWork" method="get">
-                <input type="hidden" name="employeeId" value="@empl.EmployeeId" />
-                <button class="buttonEdit">Добавить запись</button>
-            </form>
-            <form asp-controller="Home" asp-action="AddEmployeeService" method="get">
-                <input type="hidden" name="employeeId" value="@empl.EmployeeId" />
-                <button class="buttonEdit">Добавить услугу</button>
-            </form>
+            <div class="services">
+                <div class="services-title">Услуги</div>
+                @foreach (var serv in Model.Services)
+                {
+                    <div style ="display: flex;">
+                        <div class="service-item" style="margin-top:6px;">@serv.ServiceName        @serv.ServiceCost руб.</div>
+                        <form asp-controller="Home" asp-action="DeleteEmployeeService" style="margin: 10px;" method="post">
+                            <input type="hidden" name="employeeId" value="@empl.EmployeeId" />
+                            <input type="hidden" name="serviceId" value="@serv.ServiceId" />
+                            <button type="submit" class="buttonDeleteAdminEmployeeService" onclick="confirmAction(event)">X</button>
+                        </form>
+                    </div>
+                }
+            </div>
+            <div class="button-grid">
+                <form id="deleteForm-@empl.EmployeeId" asp-controller="Home" asp-action="DeleteMaster" method="post">
+                    <input type="hidden" name="employeeId" value="@empl.EmployeeId" />
+                    <button type="button" class="buttonExit" onclick="confirmDelete('@empl.EmployeeId')">Удалить</button>
+                </form>
+                <form asp-controller="Home" asp-action="EditMasterAdmin" method="get">
+                    <input type="hidden" name="employeeId" value="@empl.EmployeeId" />
+                    <button class="buttonEdit" type="submit">Редактировать</button>
+                </form>
+                <form asp-controller="Home" asp-action="AddEmployeeWork" method="get">
+                    <input type="hidden" name="employeeId" value="@empl.EmployeeId" />
+                    <button class="buttonAdd">Добавить запись</button>
+                </form>
+                <form asp-controller="Home" asp-action="AddEmployeeService" method="get">
+                    <input type="hidden" name="employeeId" value="@empl.EmployeeId" />
+                    <button class="buttonAdd">Добавить услугу</button>
+                </form>
+            </div>
+            
         }
     </div>
 </div>

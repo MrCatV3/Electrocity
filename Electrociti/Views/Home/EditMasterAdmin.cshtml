@@ -4,37 +4,37 @@
 @model Electrociti.Models.Employee
 
 <form asp-action="EditMasterAdmin" asp-controller="Home" method="post" class="form-container">
-    <>
+    <div >
         <div>
             <h1>Редактирование сотрудника</h1>
         </div>
 
         <div>
-            <input type="text" id="eImg" name="Image" placeholder="Вставьте картинку" value="@Model.EmployeeImage" required />
+            <input type="text" id="eImg" name="EmployeeImage" placeholder="Вставьте картинку" value="@Model.EmployeeImage" title="Вставьте изображение" autocomplete="off" required min="1" minlenght="1" />
         </div>
 
         <div>
-            <input type="text" id="eName" name="EmployeeName" placeholder="Имя сотрудника" value="@Model.EmployeeName" required />
+            <input type="text" id="eName" name="EmployeeName" placeholder="Имя сотрудника" value="@Model.EmployeeName" pattern="[A-Za-zА-Яа-яЁё]+" title="Введите только буквы" autocomplete="off" required min="1" minlenght="1" />
         </div>
 
         <div>
-            <input type="text" id="eSecName" name="SecondName" placeholder="Фамилия сотрудника" value="@Model.EmployeeSurname" autocomplete="off" />
+            <input type="text" id="eSecName" name="EmployeeSurname" placeholder="Фамилия сотрудника" value="@Model.EmployeeSurname" autocomplete="off" pattern="[A-Za-zА-Яа-яЁё]+" title="Введите только буквы" required min="1" minlenght="1" />
         </div>
 
         <div>
-            <input type="text" id="ePatronomic" name="Patronomic" placeholder="Отчество сотрудника" value="@Model.EmployeePatronomic" autocomplete="off" />
+            <input type="text" id="ePatronomic" name="EmployeePatronomic" placeholder="Отчество сотрудника" value="@Model.EmployeePatronomic" autocomplete="off" pattern="[A-Za-zА-Яа-яЁё]+" title="Введите только буквы" required min="1" minlenght="1" />
         </div>
 
         <div>
-            <textarea id="eDescription" name="EmployeeDescription" placeholder="Описание сотрудника" autocomplete="off" required class="textAreaDescription" oninput="autoResize(this)">@Model.EmployeeDescription</textarea>
+            <textarea id="eDescription" name="EmployeeDescription" placeholder="Описание сотрудника" autocomplete="off" required min="1" class="textAreaDescription" oninput="autoResize(this)">@Model.EmployeeDescription</textarea>
         </div>
 
         <div>
-            <input type="text" id="eAddress" name="EmployeeAddress" placeholder="Адрес сотрудника" autocomplete="off" value="@Model.EmployeeAddress" required />
+            <input type="text" id="eAddress" name="EmployeeAddress" placeholder="Адрес сотрудника" pattern="[A-Za-zА-Яа-яЁё]+" title="Введите только буквы" autocomplete="off" required min="1" value="@Model.EmployeeAddress"/>
         </div>
               
         <div>
-            <input type="text" id="ePhone" name="EmployeePhone" placeholder="Телефон сотрудника" autocomplete="off" value="@Model.EmployeePhone" required />
+            <input type="text" id="ePhone" name="EmployeePhone" placeholder="Телефон сотрудника" pattern="[0-9]+" title="Пример номера: 8999999999" required minlength="11" maxlength="11" autocomplete="off" value="@Model.EmployeePhone"/>
         </div>
 
         <input type="hidden" name="EmployeeId" value="@Model.EmployeeId" />
