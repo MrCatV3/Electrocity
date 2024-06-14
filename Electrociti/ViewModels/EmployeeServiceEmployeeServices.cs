@@ -9,5 +9,7 @@ namespace Electrociti.ViewModels
         public List<EmployeeService> EmployeeServices { get; set; }
         public List<EmployeeWork> Works { get; set; }
         public string Search { get; set; }
+        public int CurrentPage { get; set; }
+        public int TotalPages { get; set; }
     }
 }

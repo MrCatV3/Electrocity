@@ -1,11 +1,11 @@
 ﻿@{
-    ViewData["Title"] = "AddMaster";
+    ViewData["Title"] = "AddEmployee";
 }
 @using Electrociti.ViewModels
-@model EmployeeServiceEmployeeServices
+@model Employee
 
 
-<form asp-action="AddMaster" asp-controller="Home" method="post" class="form-container">
+<form asp-action="AddEmployee" asp-controller="Home" method="post" class="form-container">
     <div>
         <div>
             <h1>Добавление сотрудника</h1>
@@ -28,7 +28,7 @@
         </div>
 
         <div>
-            <textarea id="eDescription" name="EmployeeDescription" placeholder="Описание сотрудника" autocomplete="off" required class="textAreaDescription" oninput="autoResize(this)"></textarea>
+            <textarea id="eDescription" name="EmployeeDescription" placeholder="Описание сотрудника" autocomplete="off" class="textAreaDescription" oninput="autoResize(this)"></textarea>
         </div>
 
         <div>
@@ -36,12 +36,14 @@
         </div>
 
         <div>
-            <input type="text" id="ePhone" name="EmployeePhone" placeholder="Телефон сотрудника" autocomplete="off" required />
+            <input type="text" id="ePhone" name="EmployeePhone" placeholder="Телефон сотрудника" maxlength="11" autocomplete="off" required />
+            <span asp-validation-for="EmployeePhone" class="text-danger"></span>
+
         </div>
 
         <div>
             <p>Дата рождения</p>
-            <input type="date" id="eDate" name="SelectDate" max="@ViewBag.Today"/>
+            <input type="date" id="eDate" name="SelectedDate" max="@ViewBag.Today"/>
         </div>
 
         <button type="submit">Сохранить</button>

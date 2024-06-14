@@ -28,15 +28,26 @@
             @RenderBody()
         </main>
     </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            <a class="textFooter" href="">О нас</a>
-            <a class="textFooter" href="">Все права защищены</a>
-            <a class="textFooter" href="">Наши контакты</a>
-            &copy; 2023 - Electrociti - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
+        <footer>
+            <div class="footer-container">
+                <div class="footer-section">
+                    <a class="textFooter" href="~/Home/About_us">О нас</a>
+                    <p>ElectroCity - ведущая компания по предоставлению профессиональных электромонтажных услуг.</p>
+                </div>
+                <div class="footer-section">
+                    <a class="textFooter" href="~/Home/Rights_reserved">Все права защищены</a>
+                    <p>© 2024 ElectroCity. Все права защищены.</p>
+                    <p><a href="~/Home/Terms_of_service">Условия использования</a></p>
+                    <p><a href="~/Home/Privacy_policy">Политика конфиденциальности</a></p>
+                </div>
+                <div class="footer-section">
+                    <a class="textFooter" href="~/Home/Contact_us">Наши контакты</a>
+                    <p>Адрес: ул. Примерная, д. 123, Москва, Россия</p>
+                    <p>Телефон: +7 (123) 456-7890</p>
+                    <p>Email: info@electrocity.com</p>
+                </div>
+            </div>
+        </footer>
     </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

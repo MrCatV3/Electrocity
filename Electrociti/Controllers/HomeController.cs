@@ -13,6 +13,7 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Drawing.Printing;
 
 namespace Electrociti.Controllers
 {
@@ -32,7 +33,7 @@ namespace Electrociti.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public IActionResult Index(string searchString, int? minCost, int? maxCost, bool rate, int MasterId)
+        public IActionResult Index(string searchString, int? minCost, int? maxCost, bool rate, int pageNumber = 1, int pageSize = 3)
         {
 
             List<Employee> searchResults;
@@ -84,11 +85,17 @@ namespace Electrociti.Controllers
                 }
             }
 
+            int totalItems = searchResults.Count;
+            var employeesOnPage = searchResults.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+
+
             EmployeeServiceEmployeeServices VM = new EmployeeServiceEmployeeServices
             {
-                Employee = searchResults,
+                Employee = employeesOnPage,
                 Services = _context.Service.ToList(),
                 EmployeeServices = _context.EmployeeService.ToList(),
+                CurrentPage = pageNumber,
+                TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize)
             };
 
             return View(VM);
@@ -147,26 +154,40 @@ namespace Electrociti.Controllers
             return View();
         }
 
-        public IActionResult Admin(string searchString, int? minCost, int? maxCost, bool rate, int MasterId)
+        public IActionResult Admin(string searchString, int? minCost, int? maxCost, bool rate, int pageNumber = 1, int pageSize = 3)
         {
             List<Employee> searchResults;
-            
+            searchResults = _context.Employee2.ToList();
+            int totalItems = searchResults.Count;
+            var employeesOnPage = searchResults.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
 
             EmployeeServiceEmployeeServices VM = new EmployeeServiceEmployeeServices
             {
-                Employee = searchResults = _context.Employee2.ToList(),
+                Employee = employeesOnPage,
                 Services = _context.Service.ToList(),
                 EmployeeServices = _context.EmployeeService.ToList(),
+                CurrentPage = pageNumber,
+                TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize)
             };
             return View(VM);
         }
-        public IActionResult Services()
+        public IActionResult Services(int pageNumber = 1, int pageSize = 10)
         {
+            var services = _context.Service.ToList();
 
-            List<Service> services;
-            services = _context.Service.ToList();
-            return View(services);
+            int totalItems = services.Count;
+            var servicesOnPage = services.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+
+            ServicesViewModel viewModel = new ServicesViewModel
+            {
+                Service = servicesOnPage,
+                CurrentPage = pageNumber,
+                TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize)
+            };
+
+            return View(viewModel);
         }
+
         [HttpPost]
         public IActionResult DeleteService(int serviceId)
         {
@@ -181,9 +202,9 @@ namespace Electrociti.Controllers
         [HttpPost]
         public IActionResult DeleteEmployeeService(int employeeId, int serviceId)
         {
-            
+
             var employeeService = _context.EmployeeService
-            .FirstOrDefault(es => es.EmployeeId == employeeId && es.ServiceId == serviceId);
+        .FirstOrDefault(es => es.EmployeeId == employeeId && es.ServiceId == serviceId);
 
             if (employeeService != null)
             {
@@ -237,29 +258,50 @@ namespace Electrociti.Controllers
             return RedirectToAction("Services");
         }
         [HttpGet]
-        public IActionResult AddMaster()
+        public IActionResult AddEmployee()
         {
+            DateTime today = DateTime.Today;
+            ViewBag.Today = today.ToString("yyyy-MM-dd");
+
             return View();
         }
         [HttpPost]
-        public IActionResult AddMaster(string Image, string EmployeeName, string SecondName, string Patronomic, string EmployeeDescription, string EmployeeAddress, string EmployeePhone, DateTime SelectedDate)
+        public IActionResult AddEmployee(string Image, string EmployeeName, string SecondName, string? Patronomic, string EmployeeDescription, string EmployeeAddress, string EmployeePhone, DateTime SelectedDate)
         {
+            var existingEmployee = _context.Employee2.FirstOrDefault(e => e.EmployeePhone == EmployeePhone);
+            if (existingEmployee != null)
+            {
+                ModelState.AddModelError("EmployeePhone", "Сотрудник с таким номером телефона уже существует.");
+                return View("AddEmployee");
+            }
             DateTime today = DateTime.Today;
             ViewBag.Today = today.ToString("yyyy-MM-dd");
             Employee newEmployee = new Employee();
             newEmployee.EmployeeName = EmployeeName;
             newEmployee.EmployeeSurname = SecondName;
+            if (Patronomic == null)
+            {
+                Patronomic = "";
+            }
             newEmployee.EmployeePatronomic = Patronomic;
+            if (EmployeeDescription == null)
+            {
+                EmployeeDescription = "";
+            }
             newEmployee.EmployeeDescription = EmployeeDescription;
             newEmployee.EmployeeAddress = EmployeeAddress;
             newEmployee.EmployeePhone = EmployeePhone;
             newEmployee.EmployeeRole = 2;
+            newEmployee.EmployeeRate = "0";
+            newEmployee.EmployeePassword = "NewPass";
+            newEmployee.EmployeeImage = Image;
             newEmployee.EmployeeRegistrationDate = DateTime.Now;
             newEmployee.EmployeeBirthday = SelectedDate;
             _context.Add(newEmployee);
             _context.SaveChanges();
             return RedirectToAction("Admin");
         }
+        
         [HttpPost]
         public IActionResult DeleteMaster(int employeeId)
         {
@@ -385,7 +427,7 @@ namespace Electrociti.Controllers
             }
             else if (employee != null && employee.EmployeeRole == 1)
             {
-                return View("Admin", VM);
+                return RedirectToAction("Admin", VM);
             }
             else
             {
@@ -461,14 +503,7 @@ namespace Electrociti.Controllers
             ViewBag.EmployeeId = employeeId;
             return View(services);
         }
-        [HttpGet]
-        public IActionResult AddEmployee()
-        {
-            DateTime today = DateTime.Today;
-            ViewBag.Today = today.ToString("yyyy-MM-dd");
-
-            return View();
-        }
+        
         [HttpGet]
         public IActionResult AddEmployeeWork(int employeeId)
         {
@@ -572,6 +607,27 @@ namespace Electrociti.Controllers
             _context.SaveChanges();
 
             return RedirectToAction("EmployeeProfile");
+        }
+
+        public ActionResult About_us ()
+        {
+            return View();
+        }
+        public ActionResult Rights_reserved()
+        {
+            return View();
+        }
+        public ActionResult Contact_us()
+        {
+            return View();
+        }
+        public ActionResult Terms_of_service()
+        {
+            return View();
+        }
+        public ActionResult Privacy_policy()
+        {
+            return View();
         }
     }
 }
