@@ -40,6 +40,10 @@
                     </div>
                 }
             </div>
+            <form asp-controller="Home" asp-action="EmployeeWorks" method="post">
+                <input type="hidden" name="employeeId" value="@empl.EmployeeId" />
+                <button type="submit" class="buttonDeleteAdminEmployeeService">Список работ</button>
+            </form>
             <div class="button-grid">
                 <form id="deleteForm-@empl.EmployeeId" asp-controller="Home" asp-action="DeleteMaster" method="post">
                     <input type="hidden" name="employeeId" value="@empl.EmployeeId" />

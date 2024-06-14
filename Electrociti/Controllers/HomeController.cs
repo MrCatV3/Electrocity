@@ -150,48 +150,7 @@ namespace Electrociti.Controllers
         public IActionResult Admin(string searchString, int? minCost, int? maxCost, bool rate, int MasterId)
         {
             List<Employee> searchResults;
-            //if (minCost == null)
-            //{
-            //    minCost = 1;
-            //}
-            //if (maxCost == null)
-            //{
-            //    maxCost = 999999;
-            //}
-            //if (string.IsNullOrEmpty(searchString))
-            //{
-            //    searchResults = _context.EmployeeService.Where(e => e.Service.ServiceCost >= minCost && e.Service.ServiceCost <= maxCost)
-            //        .GroupBy(e => e.Employee.EmployeeId)
-            //        .Select(e => e.First().Employee)
-            //        .ToList();
-            //}
-            //else
-            //{
-            //    if (rate == true)
-            //    {
-            //        searchResults = _context.EmployeeService
-            //        .Where(e => (e.Employee.EmployeeAddress.Contains(searchString) ||
-            //             e.Employee.EmployeeDescription.Contains(searchString) ||
-            //             e.Service.ServiceName.Contains(searchString)) &&
-            //            e.Service.ServiceCost >= minCost &&
-            //            e.Service.ServiceCost <= maxCost && int.Parse(e.Employee.EmployeeRate) >= 4)
-            //        .GroupBy(e => e.Employee.EmployeeId)
-            //        .Select(e => e.First().Employee)
-            //        .ToList();
-            //    }
-            //    else
-            //    {
-            //        searchResults = _context.EmployeeService
-            //            .Where(e => (e.Employee.EmployeeAddress.Contains(searchString) ||
-            //                 e.Employee.EmployeeDescription.Contains(searchString) ||
-            //                 e.Service.ServiceName.Contains(searchString)) &&
-            //                e.Service.ServiceCost >= minCost &&
-            //                e.Service.ServiceCost <= maxCost)
-            //            .GroupBy(e => e.Employee.EmployeeId)
-            //            .Select(e => e.First().Employee)
-            //            .ToList();
-            //    }
-            //}
+            
 
             EmployeeServiceEmployeeServices VM = new EmployeeServiceEmployeeServices
             {
@@ -358,9 +317,17 @@ namespace Electrociti.Controllers
                 existingEmployee.EmployeePhone = updateEmployee.EmployeePhone;
 
                 _context.SaveChanges();
-                return RedirectToAction("Admin");
             }
-            return View(existingEmployee);
+            int? EmployeeRole = HttpContext.Session.GetInt32("EmployeeRole");
+            if (EmployeeRole == 1)
+            {
+                return RedirectToAction("Admin", existingEmployee);
+
+            }
+            else 
+            {
+                return RedirectToAction("EmployeeProfile", existingEmployee);
+            }
         }
         public IActionResult Employees()
         {
@@ -524,12 +491,87 @@ namespace Electrociti.Controllers
             };
             _context.Add(employeeWork);
             _context.SaveChanges();
-
-            return RedirectToAction("Admin");
+            int? EmployeeRole = HttpContext.Session.GetInt32("EmployeeRole");
+            if (EmployeeRole == 1)
+            {
+                return RedirectToAction("Admin");
+            }
+            else
+            {
+                return RedirectToAction("EmployeeProfile");
+            }
         }
 
+        [HttpPost]
+        public ActionResult CompleteWork(int id)
+        {
+            var employeeWork = _context.EmployeeWork.Find(id);
+            
+
+            // Логика для обработки завершения работы
+            // Например, можно добавить поле IsCompleted в модель и установить его в true
+
+            _context.SaveChanges();
+            return RedirectToAction("EmployeeProfile", new { employeeId = employeeWork.EmployeeId });
+        }
+
+        [HttpPost]
+        public ActionResult DeleteWork(int id)
+        {
+            var employeeWork = _context.EmployeeWork.Find(id);
+            
+
+            _context.EmployeeWork.Remove(employeeWork);
+            _context.SaveChanges();
+            return RedirectToAction("EmployeeProfile", new { employeeId = employeeWork.EmployeeId });
+        }
+        public IActionResult EmployeeWorks()
+        {
+            int? EmployeeId = HttpContext.Session.GetInt32("EmployeeId");
+            if (EmployeeId == null)
+            {
+                return View("Login");
+            }
+            var employeeServices = _context.EmployeeService
+            .Include(es => es.Service)
+            .Where(es => es.EmployeeId == EmployeeId)
+            .ToList();
+            EmployeeServiceEmployeeServices VM = new EmployeeServiceEmployeeServices
+            {
+                Employee = _context.Employee2.Where(e => e.EmployeeId == EmployeeId).ToList(),
+                Services = employeeServices.Select(es => es.Service).ToList(),
+                EmployeeServices = _context.EmployeeService.ToList(),
+                Works = _context.EmployeeWork.Where(e => e.EmployeeId == EmployeeId).ToList(),
+            };
+            return View(VM);
+        }
+        [HttpPost]
+        public IActionResult EmployeeWorks(int employeeId)
+        {
+            var employeeServices = _context.EmployeeService
+            .Include(es => es.Service)
+            .Where(es => es.EmployeeId == employeeId)
+            .ToList();
+            EmployeeServiceEmployeeServices VM = new EmployeeServiceEmployeeServices
+            {
+                Employee = _context.Employee2.Where(e => e.EmployeeId == employeeId).ToList(),
+                Services = employeeServices.Select(es => es.Service).ToList(),
+                EmployeeServices = _context.EmployeeService.ToList(),
+                Works = _context.EmployeeWork.Where(e => e.EmployeeId == employeeId).ToList(),
+            };
+            return View(VM);
+        }
+        [HttpPost]
+        public ActionResult DeleteEmployeeWork(int workId) 
+        {
+
+            var employeeWork = _context.EmployeeWork.Find(workId);
 
 
+            _context.EmployeeWork.Remove(employeeWork);
+            _context.SaveChanges();
 
+            return RedirectToAction("EmployeeProfile");
+        }
     }
 }

@@ -1,0 +1,48 @@
+﻿
+@using Electrociti.ViewModels
+@model EmployeeServiceEmployeeServices
+
+@{
+    ViewBag.Title = "Employee Work List";
+}
+
+<h2>Список работ сотрудника</h2>
+<div class="work-schedule">
+    @foreach (var work in Model.Works)
+    {
+        @if (work.EmployeeWorkDate > DateTime.Now)
+        {
+            <div class="work-item">
+                <div class="work-order" style="margin-left:10px">Номер заказа #@work.EmployeeWorkId</div>
+                <div class="work-date" style="margin-left:10px">Дата выезда: @work.EmployeeWorkDate.ToString("dd.MM.yyyy") - @work.EmployeeWorkTime</div>
+                <div class="work-phone" style="margin-left:10px">Номер телефона клиента: @work.EmployeeWorkPhone</div>
+                <div class="work-address" style="margin-left:10px">Адрес клиента: @work.EmployeeWorkAdress</div>
+                <div class="work-name" style="margin-left:10px">Имя клиента: @work.EmployeeWorkName</div>
+                <div style="display: flex; align-items: center;">
+                    <form asp-controller="Home" asp-action="DeleteEmployeeWork" style="margin: 10px;" method="post">
+                        <input type="hidden" name="workId" value="@work.EmployeeWorkId" />
+                        <button title="Отказаться" type="submit" class="buttonDeleteAdminEmployeeService" data-work-id="@work.EmployeeWorkId" onclick="confirmAction(event)">X</button>
+                    </form>
+                    <form asp-controller="Home" asp-action="CompleteWork" method="post">
+                        <input type="hidden" name="workId" value="@work.EmployeeWorkId" />
+                        <button title="Выполнено" type="submit" class="buttonDeleteAdminEmployeeService" style="background:green;">✔</button>
+                    </form>
+                </div>
+                
+            </div>
+        }
+    }
+</div>
+
+<script>
+    function confirmAction(button) {
+        var workId = button.getAttribute('data-work-id');
+
+        if (confirm("Вы уверены, что хотите отказаться от работы?")) {
+            var form = button.closest('form');
+            form.submit();
+        } else {
+            console.log("Action canceled");
+        }
+    }
+</script>
