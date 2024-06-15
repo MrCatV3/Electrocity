@@ -18,6 +18,7 @@
                 <div class="work-phone" style="margin-left:10px">Номер телефона клиента: @work.EmployeeWorkPhone</div>
                 <div class="work-address" style="margin-left:10px">Адрес клиента: @work.EmployeeWorkAdress</div>
                 <div class="work-name" style="margin-left:10px">Имя клиента: @work.EmployeeWorkName</div>
+                <div class="work-name" style="margin-left:10px">Сатус: @work.EmployeeWorkStatus</div>
                 <div style="display: flex; align-items: center;">
                     <form asp-controller="Home" asp-action="DeleteEmployeeWork" style="margin: 10px;" method="post">
                         <input type="hidden" name="workId" value="@work.EmployeeWorkId" />

@@ -15,9 +15,9 @@
 
     
     <div class="displayInfoAdmin">
+            <button class="buttonAddAdminService" onclick="navigateToForm()"> Добавить новую услугу </button>
         @if (Model != null && Model.Service.Any())
         {
-            <button class="buttonAddAdminService" onclick="navigateToForm()"> Добавить новую услугу </button>
             @foreach (var service in Model.Service)
             {
                 <div class="divInfoServicesAdmin">

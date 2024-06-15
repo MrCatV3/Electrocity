@@ -5,18 +5,19 @@ namespace Electrociti.Models
 {
     public class ApplicationContext : DbContext
     {
-        private readonly string _connectionString = "Data Source=DESKTOP-8ES4I02\\SQLEXPRESS;Database=ElectroCity;Integrated Security=sspi;Encrypt=False;TrustServerCertificate=true";
+        private readonly string _connectionString = "Data Source=DESKTOP-8ES4I02\\SQLEXPRESS;Database=ElectroCityXX;Integrated Security=sspi;Encrypt=False;TrustServerCertificate=true";
         //private readonly string _connectionString = "Data Source=DESKTOP-545KIBV\\SQLEXPRESS;Database=ElectroCity;Integrated Security=sspi;Encrypt=False;TrustServerCertificate=true";
 
         public DbSet<Service> Service { get; set; }
-        public DbSet<Employee> Employee2 { get; set; }
+        public DbSet<Employee> Employee { get; set; }
         public DbSet<Comment> Comments { get; set; }
-        public DbSet<Purchase> Purchases2 { get; set; }
+        public DbSet<Purchase> Purchases { get; set; }
         public DbSet<EmployeeService> EmployeeService { get; set; }
-        public DbSet<CommentEmployee> CommentEmployees2 { get; set; }
+        public DbSet<CommentEmployee> CommentEmployees { get; set; }
         public DbSet<EmployeeWork> EmployeeWork { get; set; }
         public ApplicationContext()
         {
+
         }
 
         public ApplicationContext(DbContextOptions<ApplicationContext> options) 

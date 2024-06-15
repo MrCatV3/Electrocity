@@ -119,7 +119,7 @@ namespace Electrociti.Controllers
             .ToList();
             EmployeeServiceEmployeeServices VM = new EmployeeServiceEmployeeServices
             {
-                Employee = _context.Employee2.Where(e => e.EmployeeId == EmployeeId).ToList(),
+                Employee = _context.Employee.Where(e => e.EmployeeId == EmployeeId).ToList(),
                 Services = employeeServices.Select(es => es.Service).ToList(),
                 EmployeeServices = _context.EmployeeService.ToList(),
                 Works = _context.EmployeeWork.Where(e => e.EmployeeId == EmployeeId).ToList(),
@@ -135,7 +135,7 @@ namespace Electrociti.Controllers
                 .Where(es => es.EmployeeId == EmployeeId)
                 .ToList();
 
-            var employee = _context.Employee2.Where(e => e.EmployeeId == EmployeeId).ToList();
+            var employee = _context.Employee.Where(e => e.EmployeeId == EmployeeId).ToList();
 
             EmployeeServiceEmployeeServices VM = new EmployeeServiceEmployeeServices
             {
@@ -157,7 +157,7 @@ namespace Electrociti.Controllers
         public IActionResult Admin(string searchString, int? minCost, int? maxCost, bool rate, int pageNumber = 1, int pageSize = 3)
         {
             List<Employee> searchResults;
-            searchResults = _context.Employee2.ToList();
+            searchResults = _context.Employee.ToList();
             int totalItems = searchResults.Count;
             var employeesOnPage = searchResults.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
 
@@ -268,7 +268,7 @@ namespace Electrociti.Controllers
         [HttpPost]
         public IActionResult AddEmployee(string Image, string EmployeeName, string SecondName, string? Patronomic, string EmployeeDescription, string EmployeeAddress, string EmployeePhone, DateTime SelectedDate)
         {
-            var existingEmployee = _context.Employee2.FirstOrDefault(e => e.EmployeePhone == EmployeePhone);
+            var existingEmployee = _context.Employee.FirstOrDefault(e => e.EmployeePhone == EmployeePhone);
             if (existingEmployee != null)
             {
                 ModelState.AddModelError("EmployeePhone", "Сотрудник с таким номером телефона уже существует.");
@@ -326,10 +326,10 @@ namespace Electrociti.Controllers
         [HttpPost]
         public IActionResult DeleteMaster(int employeeId)
         {
-            var employee = _context.Employee2.Find(employeeId);
+            var employee = _context.Employee.Find(employeeId);
             if (employee != null)
             {
-                _context.Employee2.Remove(employee);
+                _context.Employee.Remove(employee);
                 _context.SaveChanges();
             }
 
@@ -343,7 +343,7 @@ namespace Electrociti.Controllers
             .Where(es => es.EmployeeId == EmployeeId)
             .ToList();
 
-            var employee = _context.Employee2.Where(e => e.EmployeeId == EmployeeId).ToList();
+            var employee = _context.Employee.Where(e => e.EmployeeId == EmployeeId).ToList();
 
             EmployeeServiceEmployeeServices VM = new EmployeeServiceEmployeeServices
             {
@@ -362,13 +362,13 @@ namespace Electrociti.Controllers
         [HttpGet]
         public IActionResult EditMasterAdmin(int employeeId)
         {
-            Employee employee = _context.Employee2.Find(employeeId);
+            Employee employee = _context.Employee.Find(employeeId);
             return View(employee);
         }
         [HttpPost]
         public IActionResult EditMasterAdmin(Employee updateEmployee)
         {
-            var existingEmployee = _context.Employee2.Find(updateEmployee.EmployeeId);
+            var existingEmployee = _context.Employee.Find(updateEmployee.EmployeeId);
             if (existingEmployee != null)
             {
                 // Логирование строки Base64 для отладки
@@ -391,27 +391,28 @@ namespace Electrociti.Controllers
 
                 _context.SaveChanges();
             }
+            
             int? EmployeeRole = HttpContext.Session.GetInt32("EmployeeRole");
             if (EmployeeRole == 1)
             {
-                return RedirectToAction("Admin", existingEmployee);
+                return RedirectToAction("Admin");
             }
             else
             {
-                return RedirectToAction("EmployeeProfile", existingEmployee);
+                return RedirectToAction("EmployeeProfile");
             }
         }
 
         public IActionResult Employees()
         {
             List<Employee> employees;
-            employees = _context.Employee2.ToList();
+            employees = _context.Employee.ToList();
             return View(employees);
         }
         public IActionResult Test()
         {
             List<Employee> employees;
-            employees = _context.Employee2.ToList();
+            employees = _context.Employee.ToList();
             return View(employees);
         }
 
@@ -448,7 +449,7 @@ namespace Electrociti.Controllers
             }
             EmployeeServiceEmployeeServices VM = new EmployeeServiceEmployeeServices
             {
-                Employee = _context.Employee2.ToList(),
+                Employee = _context.Employee.ToList(),
                 Services = _context.Service.ToList(),
                 EmployeeServices = _context.EmployeeService.ToList(),
             };
@@ -476,7 +477,7 @@ namespace Electrociti.Controllers
         public IActionResult UpdateEmployeeProfile()
         {
             int employeeId = HttpContext.Session.GetInt32("EmployeeId").Value;
-            var employee = _context.Employee2.Find(employeeId);
+            var employee = _context.Employee.Find(employeeId);
 
             return View(employee);
         }
@@ -484,7 +485,7 @@ namespace Electrociti.Controllers
         public IActionResult UpdateEmployeeProfile(Employee updatedEmployee, string Password)
         {
 
-            var existingEmployee = _context.Employee2.Find(updatedEmployee.EmployeeId);
+            var existingEmployee = _context.Employee.Find(updatedEmployee.EmployeeId);
 
             if (existingEmployee != null)
             {
@@ -553,6 +554,7 @@ namespace Electrociti.Controllers
                 EmployeeWorkAdress = EmployeeWorkAdress,
                 EmployeeWorkPhone = EmployeeWorkPhone,
                 EmployeeWorkName = EmployeeWorkName,
+                EmployeeWorkStatus = "В ожидании",
                 EmployeeId = employeeId
             };
             _context.Add(employeeWork);
@@ -604,7 +606,7 @@ namespace Electrociti.Controllers
             .ToList();
             EmployeeServiceEmployeeServices VM = new EmployeeServiceEmployeeServices
             {
-                Employee = _context.Employee2.Where(e => e.EmployeeId == EmployeeId).ToList(),
+                Employee = _context.Employee.Where(e => e.EmployeeId == EmployeeId).ToList(),
                 Services = employeeServices.Select(es => es.Service).ToList(),
                 EmployeeServices = _context.EmployeeService.ToList(),
                 Works = _context.EmployeeWork.Where(e => e.EmployeeId == EmployeeId).ToList(),
@@ -620,7 +622,7 @@ namespace Electrociti.Controllers
             .ToList();
             EmployeeServiceEmployeeServices VM = new EmployeeServiceEmployeeServices
             {
-                Employee = _context.Employee2.Where(e => e.EmployeeId == employeeId).ToList(),
+                Employee = _context.Employee.Where(e => e.EmployeeId == employeeId).ToList(),
                 Services = employeeServices.Select(es => es.Service).ToList(),
                 EmployeeServices = _context.EmployeeService.ToList(),
                 Works = _context.EmployeeWork.Where(e => e.EmployeeId == employeeId).ToList(),
