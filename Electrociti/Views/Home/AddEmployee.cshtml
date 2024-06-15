@@ -4,7 +4,6 @@
 @using Electrociti.ViewModels
 @model Employee
 
-
 <form asp-action="AddEmployee" asp-controller="Home" method="post" class="form-container">
     <div>
         <div>
@@ -12,7 +11,8 @@
         </div>
 
         <div>
-            <input type="text" id="eImg" name="Image" placeholder="Вставьте картинку" autocomplete="off"  required />
+            <input type="file" id="eImgFile" accept="image/*" onchange="convertToBase64(this)">
+            <input type="hidden" id="eImg" name="Image" />
         </div>
 
         <div>
@@ -20,11 +20,11 @@
         </div>
 
         <div>
-            <input type="text" id="eSecName" name="SecondName" placeholder="Фамилия сотрудника" autocomplete="off"/>
+            <input type="text" id="eSecName" name="SecondName" placeholder="Фамилия сотрудника" autocomplete="off" />
         </div>
 
         <div>
-            <input type="text" id="ePatronomic" name="Patronomic" placeholder="Отчество сотрудника" autocomplete="off"/>
+            <input type="text" id="ePatronomic" name="Patronomic" placeholder="Отчество сотрудника" autocomplete="off" />
         </div>
 
         <div>
@@ -38,12 +38,11 @@
         <div>
             <input type="text" id="ePhone" name="EmployeePhone" placeholder="Телефон сотрудника" maxlength="11" autocomplete="off" required />
             <span asp-validation-for="EmployeePhone" class="text-danger"></span>
-
         </div>
 
         <div>
             <p>Дата рождения</p>
-            <input type="date" id="eDate" name="SelectedDate" max="@ViewBag.Today"/>
+            <input type="date" id="eDate" name="SelectedDate" max="@ViewBag.Today" />
         </div>
 
         <button type="submit">Сохранить</button>
@@ -51,6 +50,22 @@
 </form>
 
 <script>
+    function convertToBase64(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                var base64String = e.target.result;
+                // Проверка валидности строки Base64
+                if (base64String.startsWith("data:image/") && base64String.includes("base64,")) {
+                    document.getElementById('eImg').value = base64String;
+                } else {
+                    alert("Некорректное изображение.");
+                }
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
     function autoResize(textarea) {
         textarea.style.height = 'auto';
         textarea.style.height = (textarea.scrollHeight) + 'px';

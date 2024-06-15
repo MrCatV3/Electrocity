@@ -274,34 +274,55 @@ namespace Electrociti.Controllers
                 ModelState.AddModelError("EmployeePhone", "Сотрудник с таким номером телефона уже существует.");
                 return View("AddEmployee");
             }
+
+            // Проверка валидности строки Base64
+            if (!IsBase64String(Image))
+            {
+                ModelState.AddModelError("Image", "Некорректное изображение.");
+                return View("AddEmployee");
+            }
+
             DateTime today = DateTime.Today;
             ViewBag.Today = today.ToString("yyyy-MM-dd");
-            Employee newEmployee = new Employee();
-            newEmployee.EmployeeName = EmployeeName;
-            newEmployee.EmployeeSurname = SecondName;
-            if (Patronomic == null)
+
+            Employee newEmployee = new Employee
             {
-                Patronomic = "";
-            }
-            newEmployee.EmployeePatronomic = Patronomic;
-            if (EmployeeDescription == null)
-            {
-                EmployeeDescription = "";
-            }
-            newEmployee.EmployeeDescription = EmployeeDescription;
-            newEmployee.EmployeeAddress = EmployeeAddress;
-            newEmployee.EmployeePhone = EmployeePhone;
-            newEmployee.EmployeeRole = 2;
-            newEmployee.EmployeeRate = "0";
-            newEmployee.EmployeePassword = "NewPass";
-            newEmployee.EmployeeImage = Image;
-            newEmployee.EmployeeRegistrationDate = DateTime.Now;
-            newEmployee.EmployeeBirthday = SelectedDate;
+                EmployeeName = EmployeeName,
+                EmployeeSurname = SecondName,
+                EmployeePatronomic = Patronomic ?? "",
+                EmployeeDescription = EmployeeDescription ?? "",
+                EmployeeAddress = EmployeeAddress,
+                EmployeePhone = EmployeePhone,
+                EmployeeRole = 2,
+                EmployeeRate = "0",
+                EmployeePassword = "NewPass",
+                EmployeeImage = Image,
+                EmployeeRegistrationDate = DateTime.Now,
+                EmployeeBirthday = SelectedDate
+            };
+
             _context.Add(newEmployee);
             _context.SaveChanges();
+
             return RedirectToAction("Admin");
         }
-        
+
+
+        // Метод для проверки валидности строки Base64
+        private bool IsBase64String(string base64)
+        {
+            if (string.IsNullOrEmpty(base64))
+            {
+                return false;
+            }
+
+            string base64Data = base64.Contains(",") ? base64.Split(',')[1] : base64;
+            Span<byte> buffer = new Span<byte>(new byte[base64Data.Length]);
+            return Convert.TryFromBase64String(base64Data, buffer, out _);
+        }
+
+
+
         [HttpPost]
         public IActionResult DeleteMaster(int employeeId)
         {
@@ -350,11 +371,21 @@ namespace Electrociti.Controllers
             var existingEmployee = _context.Employee2.Find(updateEmployee.EmployeeId);
             if (existingEmployee != null)
             {
+                // Логирование строки Base64 для отладки
+                System.Diagnostics.Debug.WriteLine("Base64 Image: " + updateEmployee.EmployeeImage);
+
+                // Проверка валидности строки Base64
+                if (!IsBase64String(updateEmployee.EmployeeImage))
+                {
+                    ModelState.AddModelError("Image", "Некорректное изображение.");
+                    return View(updateEmployee);
+                }
+
                 existingEmployee.EmployeeImage = updateEmployee.EmployeeImage;
                 existingEmployee.EmployeeName = updateEmployee.EmployeeName;
                 existingEmployee.EmployeeSurname = updateEmployee.EmployeeSurname;
-                existingEmployee.EmployeePatronomic = updateEmployee.EmployeePatronomic;
-                existingEmployee.EmployeeDescription = updateEmployee.EmployeeDescription;
+                existingEmployee.EmployeePatronomic = updateEmployee.EmployeePatronomic ?? "";
+                existingEmployee.EmployeeDescription = updateEmployee.EmployeeDescription ?? "";
                 existingEmployee.EmployeeAddress = updateEmployee.EmployeeAddress;
                 existingEmployee.EmployeePhone = updateEmployee.EmployeePhone;
 
@@ -364,13 +395,13 @@ namespace Electrociti.Controllers
             if (EmployeeRole == 1)
             {
                 return RedirectToAction("Admin", existingEmployee);
-
             }
-            else 
+            else
             {
                 return RedirectToAction("EmployeeProfile", existingEmployee);
             }
         }
+
         public IActionResult Employees()
         {
             List<Employee> employees;
@@ -392,7 +423,7 @@ namespace Electrociti.Controllers
 
             if (EmployeeId != null)
             {
-                return View("Index");
+                return RedirectToAction("Index");
             }
             else
             {

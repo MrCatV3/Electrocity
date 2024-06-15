@@ -10,7 +10,8 @@
         </div>
 
         <div>
-            <input type="text" id="eImg" name="EmployeeImage" placeholder="Вставьте картинку" value="@Model.EmployeeImage" title="Вставьте изображение" autocomplete="off" required min="1" minlenght="1" />
+            <input type="file" id="eImgFile" accept="image/*" onchange="convertToBase64(this)">
+            <input type="hidden" id="eImg" name="EmployeeImage" value="@Model.EmployeeImage" />
         </div>
 
         <div>
@@ -22,11 +23,11 @@
         </div>
 
         <div>
-            <input type="text" id="ePatronomic" name="EmployeePatronomic" placeholder="Отчество сотрудника" value="@Model.EmployeePatronomic" autocomplete="off" pattern="[A-Za-zА-Яа-яЁё]+" title="Введите только буквы" required min="1" minlenght="1" />
+            <input type="text" id="ePatronomic" name="EmployeePatronomic" placeholder="Отчество сотрудника" value="@Model.EmployeePatronomic" autocomplete="off" pattern="[A-Za-zА-Яа-яЁё]+" title="Введите только буквы" />
         </div>
 
         <div>
-            <textarea id="eDescription" name="EmployeeDescription" placeholder="Описание сотрудника" autocomplete="off" required min="1" class="textAreaDescription" oninput="autoResize(this)">@Model.EmployeeDescription</textarea>
+            <textarea id="eDescription" name="EmployeeDescription" placeholder="Описание сотрудника" autocomplete="off" class="textAreaDescription" oninput="autoResize(this)">@Model.EmployeeDescription</textarea>
         </div>
 
         <div>
@@ -44,6 +45,22 @@
 </form>
 
 <script>
+    function convertToBase64(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                var base64String = e.target.result;
+                // Проверка валидности строки Base64
+                if (base64String.startsWith("data:image/") && base64String.includes("base64,")) {
+                    document.getElementById('eImg').value = base64String;
+                } else {
+                    alert("Некорректное изображение.");
+                }
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
     function autoResize(textarea) {
         textarea.style.height = 'auto';
         textarea.style.height = (textarea.scrollHeight) + 'px';
