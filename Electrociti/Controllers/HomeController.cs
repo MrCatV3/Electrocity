@@ -332,8 +332,17 @@ namespace Electrociti.Controllers
                 _context.Employee.Remove(employee);
                 _context.SaveChanges();
             }
-
-            return RedirectToAction("Admin");
+            int? EmployeeRole = HttpContext.Session.GetInt32("EmployeeRole");
+            if (EmployeeRole == 2)
+            {
+                HttpContext.Session.Clear();
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                return RedirectToAction("Admin");
+            }
+            
         }
         [HttpGet]
         public IActionResult EditMaster(int EmployeeId)
