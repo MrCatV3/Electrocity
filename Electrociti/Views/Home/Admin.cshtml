@@ -23,7 +23,12 @@
                     <div onclick="window.location.href='/Home/EditMaster?EmployeeId=@employee.EmployeeId'" class="card">
                     <img class="imgMaster" src="@employee.EmployeeImage" />
                     <a class="textNameCard">@employee.EmployeeName</a>
-                    <a class="textDescriptionCard">@employee.EmployeeDescription</a>
+                        <a class="textNameCard">@employee.EmployeeName</a>
+                        <a class="textDescriptionCard">
+                            @(employee.EmployeeDescription.Length > 250
+                                ? employee.EmployeeDescription.Substring(0, 250) + "..."
+                                : employee.EmployeeDescription)
+                        </a>
                     <a class="textAddressCard">@employee.EmployeeAddress</a>
                     <img class="imgRate" src="~/img/icons8-star-96.png" />
                     <a class="textRateCard">@employee.EmployeeRate</a>
