@@ -46,8 +46,9 @@
 
             <div class="work-schedule">
                 <div class="work-schedule-title">Рабочее время</div>
-                @foreach (var work in Model.Works)
+                @for (int i = Model.Works.Count - 1; i >= 0; i--)
                 {
+                    var work = Model.Works[i];
                     @if (work.EmployeeWorkDate > DateTime.Now)
                     {
                         <div class="work-item">

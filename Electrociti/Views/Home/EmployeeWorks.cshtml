@@ -8,11 +8,12 @@
 
 <h2>Список работ сотрудника</h2>
 <div class="work-schedule">
-    @foreach (var work in Model.Works)
+    @for (int i = Model.Works.Count - 1; i >= 0; i--)
     {
-        @if (work.EmployeeWorkDate > DateTime.Now)
+        var work = Model.Works[i];
+        @if (work.EmployeeWorkStatus == "В ожидании")
         {
-            <div class="work-item">
+            <div class="work-item" style="background-color: #d6d8db";>
                 <div class="work-order" style="margin-left:10px">Номер заказа #@work.EmployeeWorkId</div>
                 <div class="work-date" style="margin-left:10px">Дата выезда: @work.EmployeeWorkDate.ToString("dd.MM.yyyy") - @work.EmployeeWorkTime</div>
                 <div class="work-phone" style="margin-left:10px">Номер телефона клиента: @work.EmployeeWorkPhone</div>
@@ -30,6 +31,32 @@
                     </form>
                 </div>
                 
+            </div>
+        }
+        @if (work.EmployeeWorkStatus == "Выполнено")
+        {
+            <div class="work-item" style="background-color: #d4edda;">
+                <div class="work-order" style="margin-left:10px">Номер заказа #@work.EmployeeWorkId</div>
+                <div class="work-date" style="margin-left:10px">Дата выезда: @work.EmployeeWorkDate.ToString("dd.MM.yyyy") - @work.EmployeeWorkTime</div>
+                <div class="work-phone" style="margin-left:10px">Номер телефона клиента: @work.EmployeeWorkPhone</div>
+                <div class="work-address" style="margin-left:10px">Адрес клиента: @work.EmployeeWorkAdress</div>
+                <div class="work-name" style="margin-left:10px">Имя клиента: @work.EmployeeWorkName</div>
+                <div class="work-name" style="margin-left:10px">Сатус: @work.EmployeeWorkStatus</div>
+                
+
+            </div>
+        }
+        @if (work.EmployeeWorkStatus == "Отклонено")
+        {
+            <div class="work-item" style="background-color: #f8d7da;">
+                <div class="work-order" style="margin-left:10px">Номер заказа #@work.EmployeeWorkId</div>
+                <div class="work-date" style="margin-left:10px">Дата выезда: @work.EmployeeWorkDate.ToString("dd.MM.yyyy") - @work.EmployeeWorkTime</div>
+                <div class="work-phone" style="margin-left:10px">Номер телефона клиента: @work.EmployeeWorkPhone</div>
+                <div class="work-address" style="margin-left:10px">Адрес клиента: @work.EmployeeWorkAdress</div>
+                <div class="work-name" style="margin-left:10px">Имя клиента: @work.EmployeeWorkName</div>
+                <div class="work-name" style="margin-left:10px">Сатус: @work.EmployeeWorkStatus</div>
+                
+
             </div>
         }
     }

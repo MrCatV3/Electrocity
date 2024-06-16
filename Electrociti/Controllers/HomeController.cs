@@ -154,7 +154,7 @@ namespace Electrociti.Controllers
             return View();
         }
 
-        public IActionResult Admin(string searchString, int? minCost, int? maxCost, bool rate, int pageNumber = 1, int pageSize = 3)
+        public IActionResult Admin(string searchString, int? minCost, int? maxCost, bool rate, int pageNumber = 1, int pageSize = 5)
         {
             List<Employee> searchResults;
             searchResults = _context.Employee.ToList();
@@ -171,7 +171,7 @@ namespace Electrociti.Controllers
             };
             return View(VM);
         }
-        public IActionResult Services(int pageNumber = 1, int pageSize = 10)
+        public IActionResult Services(int pageNumber = 1, int pageSize = 11)
         {
             var services = _context.Service.ToList();
 
@@ -571,28 +571,38 @@ namespace Electrociti.Controllers
         }
 
         [HttpPost]
-        public ActionResult CompleteWork(int id)
+        public ActionResult CompleteWork(int workId)
         {
-            var employeeWork = _context.EmployeeWork.Find(id);
-            
+            var employeeWork = _context.EmployeeWork.Find(workId);
 
-            // Логика для обработки завершения работы
-            // Например, можно добавить поле IsCompleted в модель и установить его в true
 
+            employeeWork.EmployeeWorkStatus = "Выполнено";
             _context.SaveChanges();
-            return RedirectToAction("EmployeeProfile", new { employeeId = employeeWork.EmployeeId });
+            
+            int? EmployeeRole = HttpContext.Session.GetInt32("EmployeeRole");
+            if (EmployeeRole == 1)
+            {
+                return RedirectToAction("Admin");
+            }
+            else
+            {
+                return RedirectToAction("EmployeeProfile");
+            }
         }
 
         [HttpPost]
-        public ActionResult DeleteWork(int id)
+        public ActionResult DeleteEmployeeWork(int workId)
         {
-            var employeeWork = _context.EmployeeWork.Find(id);
-            
 
-            _context.EmployeeWork.Remove(employeeWork);
+            var employeeWork = _context.EmployeeWork.Find(workId);
+
+
+            employeeWork.EmployeeWorkStatus = "Отклонено";
             _context.SaveChanges();
-            return RedirectToAction("EmployeeProfile", new { employeeId = employeeWork.EmployeeId });
+
+            return RedirectToAction("EmployeeProfile");
         }
+
         public IActionResult EmployeeWorks()
         {
             int? EmployeeId = HttpContext.Session.GetInt32("EmployeeId");
@@ -629,18 +639,7 @@ namespace Electrociti.Controllers
             };
             return View(VM);
         }
-        [HttpPost]
-        public ActionResult DeleteEmployeeWork(int workId) 
-        {
-
-            var employeeWork = _context.EmployeeWork.Find(workId);
-
-
-            _context.EmployeeWork.Remove(employeeWork);
-            _context.SaveChanges();
-
-            return RedirectToAction("EmployeeProfile");
-        }
+        
 
         public ActionResult About_us ()
         {
