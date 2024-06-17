@@ -33,9 +33,12 @@ namespace Electrociti.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public IActionResult Index(string searchString, int? minCost, int? maxCost, bool? rate, bool? byMaterial, int experience = 1, int pageNumber = 1, int pageSize = 3)
+        public IActionResult Index(string searchString, int? minCost, int? maxCost, bool? rate, bool? byMaterial, int experience = 1, int pageNumber = 1, int pageSize = 10)
         {
-            var query = _context.EmployeeService.AsQueryable();
+            var query = _context.EmployeeService
+            .Include(es => es.Employee)
+            .Include(es => es.Service)
+            .AsQueryable();
 
             if (minCost.HasValue)
             {
@@ -53,30 +56,42 @@ namespace Electrociti.Controllers
                                           es.Service.ServiceName.Contains(searchString));
             }
 
-            if (rate == true)
-            {
-                query = query.Where(es => int.Parse(es.Employee.EmployeeRate) >= 4);
-            }
-
             if (byMaterial == true)
             {
-                query = query.Where(es => es.Employee.EmployeeRole == 2); 
+                query = query.Where(es => es.Employee.EmployeeRole == 2);
             }
 
             if (experience > 1)
             {
-                var minYears = experience - 1;
+                var minYears = experience - 2;
                 var cutoffDate = DateTime.Now.AddYears(-minYears);
                 query = query.Where(es => es.Employee.EmployeeRegistrationDate <= cutoffDate);
             }
 
-            var groupedResults = query.GroupBy(es => es.Employee.EmployeeId)
-                                      .Select(g => g.First().Employee)
-                                      .ToList();
+            var resultList = query.ToList();
+
+            if (rate == true)
+            {
+                resultList = resultList
+                    .Where(es =>
+                        int.TryParse(es.Employee.EmployeeRate, out var parsedRate) &&
+                        parsedRate >= 4
+                    ).ToList();
+            }
+
+
+            var groupedResults = resultList.GroupBy(es => es.Employee.EmployeeId)
+                                           .Select(g => g.First().Employee)
+                                           .ToList();
 
             int totalItems = groupedResults.Count;
             var employeesOnPage = groupedResults.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
-
+            ViewData["searchString"] = searchString;
+            ViewData["minCost"] = minCost;
+            ViewData["maxCost"] = maxCost;
+            ViewData["rate"] = rate;
+            ViewData["byMaterial"] = byMaterial;
+            ViewData["experience"] = experience;
             var VM = new EmployeeServiceEmployeeServices
             {
                 Employee = employeesOnPage,
@@ -88,6 +103,11 @@ namespace Electrociti.Controllers
 
             return View(VM);
         }
+
+
+
+
+
 
         public IActionResult EP()
         {
@@ -141,7 +161,7 @@ namespace Electrociti.Controllers
             return View();
         }
 
-        public IActionResult Admin(string searchString, int? minCost, int? maxCost, bool rate, int pageNumber = 1, int pageSize = 3)
+        public IActionResult Admin(string searchString, int? minCost, int? maxCost, bool rate, int pageNumber = 1, int pageSize = 15)
         {
             IQueryable<Employee> query = _context.Employee
                                           .Where(e => e.EmployeeRole == 2);
