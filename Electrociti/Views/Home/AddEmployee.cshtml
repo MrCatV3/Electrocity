@@ -16,15 +16,15 @@
         </div>
 
         <div>
-            <input type="text" id="eName" name="EmployeeName" placeholder="Имя сотрудника" autocomplete="off" required />
+            <input type="text" id="eName" name="EmployeeName" placeholder="Имя сотрудника" pattern="[A-Za-zА-Яа-яЁё]+" title="Только буквы" autocomplete="off" required />
         </div>
 
         <div>
-            <input type="text" id="eSecName" name="SecondName" placeholder="Фамилия сотрудника" autocomplete="off" />
+            <input type="text" id="eSecName" name="SecondName" pattern="[A-Za-zА-Яа-яЁё]+" title="Только буквы" placeholder="Фамилия сотрудника" autocomplete="off" />
         </div>
 
         <div>
-            <input type="text" id="ePatronomic" name="Patronomic" placeholder="Отчество сотрудника" autocomplete="off" />
+            <input type="text" id="ePatronomic" name="Patronomic" pattern="[A-Za-zА-Яа-яЁё]+" title="Только буквы" placeholder="Отчество сотрудника" autocomplete="off" />
         </div>
 
         <div>
@@ -41,18 +41,17 @@
         </div>
 
         <div>
-            <p>Дата рождения</p>
-            <input type="date" id="eDate" name="SelectedDate" max="@ViewBag.Today" />
-        </div>
-
-        <div>
-            <input type="text" id="eRate" name="EmployeeRate" placeholder="Рейтинг сотрудника" autocomplete="off" required />
+            <input type="text" id="eRate" name="EmployeeRate" placeholder="Рейтинг сотрудника" required min="1" pattern="[0-5]+" title="Введите только цифры" autocomplete="off"/>
         </div>
 
         <div>
             <input type="password" id="ePassword" name="EmployeePassword" placeholder="Пароль" autocomplete="off" required />
         </div>
 
+        <div>
+            <p>Дата рождения</p>
+            <input type="date" id="eDate" name="SelectedDate" max="@ViewBag.Today" />
+        </div>
         <button type="submit">Сохранить</button>
     </div>
 </form>

@@ -16,7 +16,11 @@
     margin-left:530px;
     margin-top:20px;
     margin-bottom:20px;">
+
     <div class="profile-container">
+        <form asp-controller="Home" asp-action="Logout" method="post">
+            <button class="button button-exit" type="submit">Выход</button>
+        </form>
         @foreach (var empl in Model.Employee)
         {
             <input type="hidden" name="EmployeeId" value="@empl.EmployeeId" />
@@ -27,9 +31,7 @@
             <div class="text text-rate">Рейтинг: @empl.EmployeeRate</div>
             <div class="text text-phone">Телефон @empl.EmployeePhone</div>
             <div class="text text-phone">Телефон горячей линии 88005553535</div>
-            <form asp-controller="Home" asp-action="Logout" method="post">
-                <button class="button button-exit" type="submit">Выход</button>
-            </form>
+            
             <form asp-controller="Home" asp-action="EditMaster" method="get">
                 <input type="hidden" name="employeeId" value="@empl.EmployeeId" />
                 <button class="button button-edit" type="submit">Редактировать</button>
@@ -62,6 +64,7 @@
                 }
             </div>
         }
+        
     </div>
 </div>
 

