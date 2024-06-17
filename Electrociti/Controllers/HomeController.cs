@@ -33,63 +33,51 @@ namespace Electrociti.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public IActionResult Index(string searchString, int? minCost, int? maxCost, bool rate, int pageNumber = 1, int pageSize = 3)
+        public IActionResult Index(string searchString, int? minCost, int? maxCost, bool? rate, bool? byMaterial, int experience = 1, int pageNumber = 1, int pageSize = 3)
         {
+            var query = _context.EmployeeService.AsQueryable();
 
-            List<Employee> searchResults;
-            int? EmployeeRole = HttpContext.Session.GetInt32("EmployeeRole");
-            if (EmployeeRole == 1)
+            if (minCost.HasValue)
             {
-                return RedirectToAction("Admin");
+                query = query.Where(es => es.Service.ServiceCost >= minCost.Value);
             }
-            if (minCost == null)
+            if (maxCost.HasValue)
             {
-                minCost = 1;
-            }
-            if (maxCost == null)
-            {
-                maxCost = 999999;
-            }
-            if (string.IsNullOrEmpty(searchString))
-            {
-                searchResults = _context.EmployeeService.Where(e => e.Service.ServiceCost >= minCost && e.Service.ServiceCost <= maxCost)
-                    .GroupBy(e => e.Employee.EmployeeId)
-                    .Select(e => e.First().Employee)
-                    .ToList();
-            }
-            else
-            {
-                if (rate == true)
-                {
-                    searchResults = _context.EmployeeService
-                    .Where(e => (e.Employee.EmployeeAddress.Contains(searchString) ||
-                         e.Employee.EmployeeDescription.Contains(searchString) ||
-                         e.Service.ServiceName.Contains(searchString)) &&
-                        e.Service.ServiceCost >= minCost &&
-                        e.Service.ServiceCost <= maxCost && int.Parse(e.Employee.EmployeeRate) >= 4)
-                    .GroupBy(e => e.Employee.EmployeeId)
-                    .Select(e => e.First().Employee)
-                    .ToList();
-                }
-                else
-                {
-                    searchResults = _context.EmployeeService
-                        .Where(e => (e.Employee.EmployeeAddress.Contains(searchString) ||
-                             e.Employee.EmployeeDescription.Contains(searchString) ||
-                             e.Service.ServiceName.Contains(searchString)) &&
-                            e.Service.ServiceCost >= minCost &&
-                            e.Service.ServiceCost <= maxCost)
-                        .GroupBy(e => e.Employee.EmployeeId)
-                        .Select(e => e.First().Employee)
-                        .ToList();
-                }
+                query = query.Where(es => es.Service.ServiceCost <= maxCost.Value);
             }
 
-            int totalItems = searchResults.Count;
-            var employeesOnPage = searchResults.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                query = query.Where(es => es.Employee.EmployeeAddress.Contains(searchString) ||
+                                          es.Employee.EmployeeDescription.Contains(searchString) ||
+                                          es.Service.ServiceName.Contains(searchString));
+            }
 
+            if (rate == true)
+            {
+                query = query.Where(es => int.Parse(es.Employee.EmployeeRate) >= 4);
+            }
 
-            EmployeeServiceEmployeeServices VM = new EmployeeServiceEmployeeServices
+            if (byMaterial == true)
+            {
+                query = query.Where(es => es.Employee.EmployeeRole == 2); 
+            }
+
+            if (experience > 1)
+            {
+                var minYears = experience - 1;
+                var cutoffDate = DateTime.Now.AddYears(-minYears);
+                query = query.Where(es => es.Employee.EmployeeRegistrationDate <= cutoffDate);
+            }
+
+            var groupedResults = query.GroupBy(es => es.Employee.EmployeeId)
+                                      .Select(g => g.First().Employee)
+                                      .ToList();
+
+            int totalItems = groupedResults.Count;
+            var employeesOnPage = groupedResults.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+
+            var VM = new EmployeeServiceEmployeeServices
             {
                 Employee = employeesOnPage,
                 Services = _context.Service.ToList(),
@@ -99,13 +87,13 @@ namespace Electrociti.Controllers
             };
 
             return View(VM);
-
         }
 
         public IActionResult EP()
         {
             return View();
         }
+
         public IActionResult EmployeeProfile()
         {
             int? EmployeeId = HttpContext.Session.GetInt32("EmployeeId");
@@ -127,6 +115,7 @@ namespace Electrociti.Controllers
 
             return View("EmployeeProfile", VM);
         }
+
         [HttpGet]
         public IActionResult Master(int EmployeeId)
         {
@@ -147,19 +136,29 @@ namespace Electrociti.Controllers
             return View(VM);
         }
 
-
-
         public IActionResult Folowing()
         {
             return View();
         }
 
-        public IActionResult Admin(string searchString, int? minCost, int? maxCost, bool rate, int pageNumber = 1, int pageSize = 5)
+        public IActionResult Admin(string searchString, int? minCost, int? maxCost, bool rate, int pageNumber = 1, int pageSize = 3)
         {
-            List<Employee> searchResults;
-            searchResults = _context.Employee.ToList();
-            int totalItems = searchResults.Count;
-            var employeesOnPage = searchResults.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+            IQueryable<Employee> query = _context.Employee
+                                          .Where(e => e.EmployeeRole == 2);
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                query = query.Where(e => e.EmployeeName.Contains(searchString));
+            }
+
+            if (rate)
+            {
+                query = query.OrderByDescending(e => e.EmployeeRate);
+            }
+
+            int totalItems = query.Count();
+
+            var employeesOnPage = query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
 
             EmployeeServiceEmployeeServices VM = new EmployeeServiceEmployeeServices
             {
@@ -169,8 +168,11 @@ namespace Electrociti.Controllers
                 CurrentPage = pageNumber,
                 TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize)
             };
+
             return View(VM);
         }
+
+
         public IActionResult Services(int pageNumber = 1, int pageSize = 11)
         {
             var services = _context.Service.ToList();
@@ -266,7 +268,7 @@ namespace Electrociti.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult AddEmployee(string Image, string EmployeeName, string SecondName, string? Patronomic, string EmployeeDescription, string EmployeeAddress, string EmployeePhone, DateTime SelectedDate)
+        public IActionResult AddEmployee(string Image, string EmployeeName, string SecondName, string? Patronomic, string EmployeeDescription, string EmployeeAddress, string EmployeePhone, DateTime SelectedDate, string EmployeeRate, string EmployeePassword)
         {
             var existingEmployee = _context.Employee.FirstOrDefault(e => e.EmployeePhone == EmployeePhone);
             if (existingEmployee != null)
@@ -284,7 +286,11 @@ namespace Electrociti.Controllers
 
             DateTime today = DateTime.Today;
             ViewBag.Today = today.ToString("yyyy-MM-dd");
-
+            if (!decimal.TryParse(EmployeeRate, out var rate) || rate < 0 || rate > 5)
+            {
+                ModelState.AddModelError("EmployeeRate", "Рейтинг должен быть числом от 0 до 5.");
+                return View("AddEmployee");
+            }
             Employee newEmployee = new Employee
             {
                 EmployeeName = EmployeeName,
@@ -293,9 +299,9 @@ namespace Electrociti.Controllers
                 EmployeeDescription = EmployeeDescription ?? "",
                 EmployeeAddress = EmployeeAddress,
                 EmployeePhone = EmployeePhone,
+                EmployeeRate = EmployeeRate,
                 EmployeeRole = 2,
-                EmployeeRate = "0",
-                EmployeePassword = "NewPass",
+                EmployeePassword = EmployeePassword,
                 EmployeeImage = Image,
                 EmployeeRegistrationDate = DateTime.Now,
                 EmployeeBirthday = SelectedDate
@@ -306,6 +312,7 @@ namespace Electrociti.Controllers
 
             return RedirectToAction("Admin");
         }
+
 
 
         // Метод для проверки валидности строки Base64

@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Admin";
 }
+
 <div class="main">
     <div class="filtersAdmin">
         <label>
@@ -13,50 +14,47 @@
         </label>
     </div>
     <div class="cards">
-        @if (Model != null && Model.Employee != null && Model.Employee.Any())
+        @if (Model.Employee.Any())
         {
             <button class="buttonAddAdminEmployee" onclick="navigateToForm()"> Добавить нового исполнителя </button>
-            @foreach (var employee in Model.Employee.Where(e => e.EmployeeRole == 2))
+            @foreach (var employee in Model.Employee)
             {
                 <form asp-action="EditMaster" asp-controller="Home" method="get">
                     <input type="hidden" name="EmployeeId" value="@employee.EmployeeId" />
                     <div onclick="window.location.href='/Home/EditMaster?EmployeeId=@employee.EmployeeId'" class="card">
-                    <img class="imgMaster" src="@employee.EmployeeImage" />
-                    <a class="textNameCard">@employee.EmployeeName</a>
+                        <img class="imgMaster" src="@employee.EmployeeImage" />
                         <a class="textNameCard">@employee.EmployeeName</a>
                         <a class="textDescriptionCard">
                             @(employee.EmployeeDescription.Length > 250
                                 ? employee.EmployeeDescription.Substring(0, 250) + "..."
                                 : employee.EmployeeDescription)
                         </a>
-                    <a class="textAddressCard">@employee.EmployeeAddress</a>
-                    <img class="imgRate" src="~/img/icons8-star-96.png" />
-                    <a class="textRateCard">@employee.EmployeeRate</a>
-                    <a class="textPhone">@employee.EmployeePhone</a>
-                    <div style="flex-direction:column;grid-column:2;grid-row:2">
-                        @foreach (var service in Model.EmployeeServices
-                       .Join(Model.Services, es => es.ServiceId, s => s.ServiceId, (es, s) => new { es, s })
-                       .Join(Model.Employee, es2 => es2.es.EmployeeId, e => e.EmployeeId, (es2, e) => new { es2.es, es2.s, e })
-                       .Where(e2 => e2.e.EmployeeId == employee.EmployeeId)
-                       .Take(3))
-                        {
-                            <div class="divCostCard">
-                                <a class="textCostCard">@service.s.ServiceCost руб.</a>
-                            </div>
-                        }
-                    </div>
-                    <div style="flex-direction:column;grid-column:2;grid-row:2">
-                        @foreach (var service in Model.EmployeeServices
-                       .Join(Model.Services, es => es.ServiceId, s => s.ServiceId, (es, s) => new { es, s })
-                       .Join(Model.Employee, es2 => es2.es.EmployeeId, e => e.EmployeeId, (es2, e) => new { es2.es, es2.s, e })
-                       .Where(e2 => e2.e.EmployeeId == employee.EmployeeId)
-                       .Take(3))
-                        {
-                            <div class="divCostCard">
-                                <a class="textNameSCard">@service.s.ServiceName</a>
-                            </div>
-                        }
-                    </div>
+                        <a class="textAddressCard">@employee.EmployeeAddress</a>
+                        <img class="imgRate" src="~/img/icons8-star-96.png" />
+                        <a class="textRateCard">@employee.EmployeeRate</a>
+                        <a class="textPhone">@employee.EmployeePhone</a>
+                        <div style="flex-direction:column;grid-column:2;grid-row:2">
+                            @foreach (var service in Model.EmployeeServices
+                           .Join(Model.Services, es => es.ServiceId, s => s.ServiceId, (es, s) => new { es, s })
+                           .Where(es => es.es.EmployeeId == employee.EmployeeId)
+                           .Take(3))
+                            {
+                                <div class="divCostCard">
+                                    <a class="textCostCard">@service.s.ServiceCost руб.</a>
+                                </div>
+                            }
+                        </div>
+                        <div style="flex-direction:column;grid-column:2;grid-row:2">
+                            @foreach (var service in Model.EmployeeServices
+                           .Join(Model.Services, es => es.ServiceId, s => s.ServiceId, (es, s) => new { es, s })
+                           .Where(es => es.es.EmployeeId == employee.EmployeeId)
+                           .Take(3))
+                            {
+                                <div class="divCostCard">
+                                    <a class="textNameSCard">@service.s.ServiceName</a>
+                                </div>
+                            }
+                        </div>
                     </div>
                 </form>
             }
@@ -87,7 +85,6 @@
             }
         </div>
     </div>
-    
 </div>
 
 <script>

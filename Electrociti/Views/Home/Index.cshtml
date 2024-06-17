@@ -16,17 +16,17 @@
                     <input class="textFilter" type="text" id="maxCost" name="maxCost" placeholder="до" />
                 </div>
                 <a class="textFilterA">Опыт работы исполнителя</a>
-                <select class="comboboxFilterAge" id="combobox">
+                <select class="comboboxFilterAge" id="combobox" name="experience">
                     <option value="1">Любой</option>
                     <option value="2">Менее 1 года</option>
                     <option value="3">2 года</option>
                     <option value="4">3 года и больше</option>
                 </select>
                 <a class="textFilterA">Исполнитель закупает материал</a>
-                <input type="checkbox" value="false" name="byMaterial" />
+                <input type="checkbox" value="true" name="byMaterial" />
                 <label class="labelFilterA">Да</label>
                 <a class="textFilterA">Рейтинг исполнителя</a>
-                <input type="checkbox" id="rate" value="false" name="rate" />
+                <input type="checkbox" id="rate" value="true" name="rate" />
                 <label class="labelFilterA">4 и выше</label>
                 <button class="buttonAccept" type="submit">Применить</button>
             </form>
@@ -34,52 +34,48 @@
     </div>
     
     <div class="cards">
-        
         @if (Model != null && Model.Employee != null && Model.Employee.Any())
         {
-            @foreach (var employee in Model.Employee.Where(e => e.EmployeeRole == 2))
+            @foreach (var employee in Model.Employee)
             {
                 <form asp-action="Master" asp-controller="Home" method="get">
                     <input type="hidden" name="EmployeeId" value="@employee.EmployeeId" />
                     <div onclick="window.location.href='/Home/Master?EmployeeId=@employee.EmployeeId'" class="card">
-                    <img class="imgMaster" src="@employee.EmployeeImage" />
-                    <a class="textNameCard">@employee.EmployeeName</a>
+                        <img class="imgMaster" src="@employee.EmployeeImage" />
+                        <a class="textNameCard">@employee.EmployeeName</a>
                         <a class="textDescriptionCard">
                             @(employee.EmployeeDescription.Length > 250
                                 ? employee.EmployeeDescription.Substring(0, 250) + "..."
                                 : employee.EmployeeDescription)
                         </a>
-                    <a class="textAddressCard">@employee.EmployeeAddress</a>
-                    <img class="imgRate" src="~/img/icons8-star-96.png" />
-                    <a class="textRateCard">@employee.EmployeeRate</a>
-                    <a class="textPhone">@employee.EmployeePhone</a>
-                    <div style="flex-direction:column;grid-column:2;grid-row:2">
-                        @foreach (var service in Model.EmployeeServices
-                     .Join(Model.Services, es => es.ServiceId, s => s.ServiceId, (es, s) => new { es, s })
-                     .Join(Model.Employee, es2 => es2.es.EmployeeId, e => e.EmployeeId, (es2, e) => new { es2.es, es2.s, e })
-                     .Where(e2 => e2.e.EmployeeId == employee.EmployeeId)
-                     .Take(3))
-                        {
-                            <div class="divCostCard">
-                                <a class="textCostCard">@service.s.ServiceCost руб.</a>
-                            </div>
-                        }
-                    </div>
-                    <div style="flex-direction:column;grid-column:2;grid-row:2">
-                        @foreach (var service in Model.EmployeeServices
-                     .Join(Model.Services, es => es.ServiceId, s => s.ServiceId, (es, s) => new { es, s })
-                     .Join(Model.Employee, es2 => es2.es.EmployeeId, e => e.EmployeeId, (es2, e) => new { es2.es, es2.s, e })
-                     .Where(e2 => e2.e.EmployeeId == employee.EmployeeId)
-                     .Take(3))
-                        {
-                            <div class="divCostCard">
-                                <a class="textNameSCard">@service.s.ServiceName</a>
-                            </div>
-                        }
-                    </div>
+                        <a class="textAddressCard">@employee.EmployeeAddress</a>
+                        <img class="imgRate" src="~/img/icons8-star-96.png" />
+                        <a class="textRateCard">@employee.EmployeeRate</a>
+                        <a class="textPhone">@employee.EmployeePhone</a>
+                        <div style="flex-direction:column;grid-column:2;grid-row:2">
+                            @foreach (var service in Model.EmployeeServices
+                           .Where(es => es.EmployeeId == employee.EmployeeId)
+                           .Select(es => es.Service)
+                           .Take(3))
+                            {
+                                <div class="divCostCard">
+                                    <a class="textCostCard">@service.ServiceCost руб.</a>
+                                </div>
+                            }
+                        </div>
+                        <div style="flex-direction:column;grid-column:2;grid-row:2">
+                            @foreach (var service in Model.EmployeeServices
+                           .Where(es => es.EmployeeId == employee.EmployeeId)
+                           .Select(es => es.Service)
+                           .Take(3))
+                            {
+                                <div class="divCostCard">
+                                    <a class="textNameSCard">@service.ServiceName</a>
+                                </div>
+                            }
+                        </div>
                     </div>
                 </form>
-                
             }
         }
         else
