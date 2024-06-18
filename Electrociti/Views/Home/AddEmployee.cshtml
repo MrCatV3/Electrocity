@@ -11,7 +11,7 @@
         </div>
 
         <div>
-            <input type="file" asp-for="EmployeeImage" id="eImgFile" accept="image/*" onchange="convertToBase64(this)">
+            <input type="file" style="margin: 15px 0px 15px 0px" asp-for="EmployeeImage" id="eImgFile" accept="image/*" onchange="convertToBase64(this)">
             <input type="hidden" id="eImg" name="EmployeeImage" />
             <span asp-validation-for="EmployeeImage" class="text-danger"></span >
         </div>
@@ -56,7 +56,7 @@
 
         <div>
             <p>Дата рождения</p>
-            <input type="date" asp-for="EmployeeBirthday" max="@ViewBag.Today" />
+            <input type="date" style="margin: 15px 0px 15px 0px" asp-for="EmployeeBirthday" max="@ViewBag.Today" />
             <span asp-validation-for="EmployeeBirthday" class="text-danger"></span>
         </div>
 

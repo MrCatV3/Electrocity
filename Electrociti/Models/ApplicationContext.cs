@@ -5,8 +5,9 @@ namespace Electrociti.Models
 {
     public class ApplicationContext : DbContext
     {
-        private readonly string _connectionString = "Data Source=DESKTOP-4PAD45N\\SQLEXPRESS;Database=ElectroCity;Integrated Security=sspi;Encrypt=False;TrustServerCertificate=true";
+        //private readonly string _connectionString = "Data Source=DESKTOP-4PAD45N\\SQLEXPRESS;Database=ElectroCity;Integrated Security=sspi;Encrypt=False;TrustServerCertificate=true";
         //private readonly string _connectionString = "Data Source=DESKTOP-545KIBV\\SQLEXPRESS;Database=ElectroCity;Integrated Security=sspi;Encrypt=False;TrustServerCertificate=true";
+        private readonly string _connectionString = "Data Source=DESKTOP-8ES4I02\\SQLEXPRESS;Database=ElectroCityXX;Integrated Security=sspi;Encrypt=False;TrustServerCertificate=true";
 
         public DbSet<Service> Service { get; set; }
         public DbSet<Employee> Employee { get; set; }
