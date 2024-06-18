@@ -625,6 +625,15 @@ namespace Electrociti.Controllers
         [HttpPost]
         public IActionResult AddEmployeeWork(string EmployeeWorkAdress, string EmployeeWorkPhone, string EmployeeWorkName, string EmployeeWorkTime, DateTime SelectDate, int employeeId)
         {
+            bool hasConflict = _context.EmployeeWork
+                .Any(e => e.EmployeeId == employeeId && e.EmployeeWorkDate == SelectDate && e.EmployeeWorkTime == EmployeeWorkTime);
+
+            if (hasConflict)
+            {
+                ModelState.AddModelError("", "У данного сотрудника уже есть назначенная работа на это время.");
+                return View(); 
+            }
+
             EmployeeWork employeeWork = new()
             {
                 EmployeeWorkDate = SelectDate,
@@ -637,6 +646,7 @@ namespace Electrociti.Controllers
             };
             _context.Add(employeeWork);
             _context.SaveChanges();
+
             int? EmployeeRole = HttpContext.Session.GetInt32("EmployeeRole");
             if (EmployeeRole == 1)
             {
@@ -647,6 +657,7 @@ namespace Electrociti.Controllers
                 return RedirectToAction("EmployeeProfile");
             }
         }
+
 
         [HttpPost]
         public ActionResult CompleteWork(int workId)
