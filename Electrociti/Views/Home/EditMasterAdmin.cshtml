@@ -15,15 +15,17 @@
         </div>
 
         <div>
-            <input type="text" id="eName" name="EmployeeName" placeholder="Имя сотрудника" value="@Model.EmployeeName" pattern="[A-Za-zА-Яа-яЁё]+" title="Введите только буквы" autocomplete="off" required min="1" minlenght="1" />
+            <input type="text" id="eName" name="EmployeeName" placeholder="Имя сотрудника" value="@Model.EmployeeName" pattern="[A-Za-zА-Яа-яЁё\s\-]+" title="Введите только буквы, пробелы и тире" autocomplete="off" required />
+            <span asp-validation-for="EmployeeName" class="text-danger"></span>
         </div>
 
         <div>
-            <input type="text" id="eSecName" name="EmployeeSurname" placeholder="Фамилия сотрудника" value="@Model.EmployeeSurname" autocomplete="off" pattern="[A-Za-zА-Яа-яЁё]+" title="Введите только буквы" required min="1" minlenght="1" />
+            <input type="text" id="eSecName" name="EmployeeSurname" placeholder="Фамилия сотрудника" value="@Model.EmployeeSurname" autocomplete="off" pattern="[A-Za-zА-Яа-яЁё\s\-]+" title="Введите только буквы, пробелы и тире" required />
+            <span asp-validation-for="EmployeeSurname" class="text-danger"></span>
         </div>
 
         <div>
-            <input type="text" id="ePatronomic" name="EmployeePatronomic" placeholder="Отчество сотрудника" value="@Model.EmployeePatronomic" autocomplete="off" pattern="[A-Za-zА-Яа-яЁё]+" title="Введите только буквы" />
+            <input type="text" id="ePatronomic" name="EmployeePatronomic" placeholder="Отчество сотрудника" value="@Model.EmployeePatronomic" autocomplete="off" pattern="[A-Za-zА-Яа-яЁё\s\-]*" title="Введите только буквы, пробелы и тире" />
         </div>
 
         <div>
@@ -31,11 +33,13 @@
         </div>
 
         <div>
-            <input type="text" id="eAddress" name="EmployeeAddress" placeholder="Адрес сотрудника" pattern="[A-Za-zА-Яа-яЁё]+" title="Введите только буквы" autocomplete="off" required min="1" value="@Model.EmployeeAddress"/>
+            <input type="text" id="eAddress" name="EmployeeAddress" placeholder="Адрес сотрудника" pattern="[A-Za-zА-Яа-яЁё\s\-,]+" title="Введите только буквы, пробелы, запятые и тире" autocomplete="off" required value="@Model.EmployeeAddress" />
+            <span asp-validation-for="EmployeeAddress" class="text-danger"></span>
         </div>
-              
+
         <div>
-            <input type="text" id="ePhone" name="EmployeePhone" placeholder="Телефон сотрудника" pattern="[0-9]+" title="Пример номера: 8999999999" required minlength="11" maxlength="11" autocomplete="off" value="@Model.EmployeePhone"/>
+            <input type="text" id="ePhone" name="EmployeePhone" placeholder="Телефон сотрудника" pattern="[0-9]+" title="Пример номера: 8999999999" required minlength="11" maxlength="11" autocomplete="off" value="@Model.EmployeePhone" />
+            <span asp-validation-for="EmployeePhone" class="text-danger"></span>
         </div>
 
         <input type="hidden" name="EmployeeId" value="@Model.EmployeeId" />

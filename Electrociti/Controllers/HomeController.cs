@@ -104,7 +104,6 @@ namespace Electrociti.Controllers
             return View(VM);
         }
 
-
         public ActionResult RedirectToRoleBasedPage()
         {
             int? EmployeeRole = HttpContext.Session.GetInt32("EmployeeRole");
@@ -124,8 +123,6 @@ namespace Electrociti.Controllers
             }
             
         }
-
-
 
         public IActionResult EP()
         {
@@ -210,7 +207,6 @@ namespace Electrociti.Controllers
             return View(VM);
         }
 
-
         public IActionResult Services(int pageNumber = 1, int pageSize = 11)
         {
             var services = _context.Service.ToList();
@@ -239,6 +235,7 @@ namespace Electrociti.Controllers
             }
             return RedirectToAction("Services");
         }
+        
         [HttpPost]
         public IActionResult DeleteEmployeeService(int employeeId, int serviceId)
         {
@@ -261,12 +258,14 @@ namespace Electrociti.Controllers
                 return RedirectToAction("Admin");
             }
         }
+        
         [HttpGet]
         public IActionResult EditService(int serviceId)
         {
             Service service1 = _context.Service.Find(serviceId);
             return View(service1);
         }
+        
         [HttpPost]
         public IActionResult EditService(Service updateService)
         {
@@ -282,21 +281,26 @@ namespace Electrociti.Controllers
             return View(existingService);
 
         }
+        
         [HttpGet]
         public IActionResult AddService()
         {
             return View();
         }
+        
         [HttpPost]
-        public IActionResult AddService(string ServiceName, int ServiceCost)
+        public IActionResult AddService(Service service)
         {
-            Service newService = new Service();
-            newService.ServiceName = ServiceName;
-            newService.ServiceCost = ServiceCost;
-            _context.Service.Add(newService);
+            if (String.IsNullOrWhiteSpace(service.ServiceName))
+            {
+                return View(service);
+            }
+
+            _context.Service.Add(service);
             _context.SaveChanges();
             return RedirectToAction("Services");
         }
+        
         [HttpGet]
         public IActionResult AddEmployee()
         {
@@ -305,68 +309,63 @@ namespace Electrociti.Controllers
 
             return View();
         }
+
         [HttpPost]
-        public IActionResult AddEmployee(string Image, string EmployeeName, string SecondName, string? Patronomic, string EmployeeDescription, string EmployeeAddress, string EmployeePhone, DateTime SelectedDate, string EmployeeRate, string EmployeePassword)
+        public IActionResult AddEmployee(Employee employee, DateTime SelectedDate)
         {
-            var existingEmployee = _context.Employee.FirstOrDefault(e => e.EmployeePhone == EmployeePhone);
-            if (existingEmployee != null)
-            {
+            
+                
+                var existingEmployee = _context.Employee.FirstOrDefault(e => e.EmployeePhone == employee.EmployeePhone);
+                if (existingEmployee != null)
+                {
                 ModelState.AddModelError("EmployeePhone", "Сотрудник с таким номером телефона уже существует.");
-                return View("AddEmployee");
+                return View("AddEmployee", employee);
             }
 
-            // Проверка валидности строки Base64
-            if (!IsBase64String(Image))
-            {
-                ModelState.AddModelError("Image", "Некорректное изображение.");
-                return View("AddEmployee");
-            }
+                // Проверка валидности строки Base64
+                if (!IsBase64String(employee.EmployeeImage))
+                {
+                    ModelState.AddModelError("Image", "Некорректное изображение.");
+                    return View("AddEmployee", employee);
+                }
 
-            DateTime today = DateTime.Today;
-            ViewBag.Today = today.ToString("yyyy-MM-dd");
-            if (!decimal.TryParse(EmployeeRate, out var rate) || rate < 0 || rate > 5)
-            {
-                ModelState.AddModelError("EmployeeRate", "Рейтинг должен быть числом от 0 до 5.");
-                return View("AddEmployee");
-            }
-            Employee newEmployee = new Employee
-            {
-                EmployeeName = EmployeeName,
-                EmployeeSurname = SecondName,
-                EmployeePatronomic = Patronomic ?? "",
-                EmployeeDescription = EmployeeDescription ?? "",
-                EmployeeAddress = EmployeeAddress,
-                EmployeePhone = EmployeePhone,
-                EmployeeRate = EmployeeRate,
-                EmployeeRole = 2,
-                EmployeePassword = EmployeePassword,
-                EmployeeImage = Image,
-                EmployeeRegistrationDate = DateTime.Now,
-                EmployeeBirthday = SelectedDate
-            };
+                DateTime today = DateTime.Today;
+                ViewBag.Today = today.ToString("yyyy-MM-dd");
 
-            _context.Add(newEmployee);
-            _context.SaveChanges();
+                Employee newEmployee = new Employee
+                {
+                    EmployeeName = employee.EmployeeName,
+                    EmployeeSurname = employee.EmployeeSurname,
+                    EmployeePatronomic = employee.EmployeePatronomic ?? "",
+                    EmployeeDescription = employee.EmployeeDescription ?? "",
+                    EmployeeAddress = employee.EmployeeAddress,
+                    EmployeePhone = employee.EmployeePhone,
+                    EmployeeRate = employee.EmployeeRate,
+                    EmployeeRole = 2,
+                    EmployeePassword = employee.EmployeePassword,
+                    EmployeeImage = employee.EmployeeImage,
+                    EmployeeRegistrationDate = DateTime.Now,
+                    EmployeeBirthday = SelectedDate
+                };
 
-            return RedirectToAction("Admin");
+                _context.Add(newEmployee);
+                _context.SaveChanges();
+
+                return RedirectToAction("Admin");
+
         }
 
-
-
-        // Метод для проверки валидности строки Base64
         private bool IsBase64String(string base64)
         {
             if (string.IsNullOrEmpty(base64))
             {
                 return false;
             }
-
+             
             string base64Data = base64.Contains(",") ? base64.Split(',')[1] : base64;
             Span<byte> buffer = new Span<byte>(new byte[base64Data.Length]);
             return Convert.TryFromBase64String(base64Data, buffer, out _);
         }
-
-
 
         [HttpPost]
         public IActionResult DeleteMaster(int employeeId)
@@ -389,6 +388,7 @@ namespace Electrociti.Controllers
             }
             
         }
+        
         [HttpGet]
         public IActionResult EditMaster(int EmployeeId)
         {
@@ -408,38 +408,30 @@ namespace Electrociti.Controllers
 
             return View(VM);
         }
+        
         [HttpPost]
         public IActionResult EditMaster()
         {
             return View();
         }
+        
         [HttpGet]
         public IActionResult EditMasterAdmin(int employeeId)
         {
             Employee employee = _context.Employee.Find(employeeId);
             return View(employee);
         }
+
         [HttpPost]
         public IActionResult EditMasterAdmin(Employee updateEmployee)
         {
+            if (String.IsNullOrWhiteSpace(updateEmployee.EmployeeAddress))
+            {
+                return View(updateEmployee);
+            }
             var existingEmployee = _context.Employee.Find(updateEmployee.EmployeeId);
             if (existingEmployee != null)
             {
-                System.Diagnostics.Debug.WriteLine("Base64 Image: " + updateEmployee.EmployeeImage);
-
-                if (!IsBase64String(updateEmployee.EmployeeImage))
-                {
-                    ModelState.AddModelError("Image", "Некорректное изображение.");
-                    return View(updateEmployee);
-                }
-
-                bool phoneExists = _context.Employee.Any(e => e.EmployeePhone == updateEmployee.EmployeePhone && e.EmployeeId != updateEmployee.EmployeeId);
-                if (phoneExists)
-                {
-                    ModelState.AddModelError("EmployeePhone", "Этот номер телефона уже используется.");
-                    return View(updateEmployee);
-                }
-
                 existingEmployee.EmployeeImage = updateEmployee.EmployeeImage;
                 existingEmployee.EmployeeName = updateEmployee.EmployeeName;
                 existingEmployee.EmployeeSurname = updateEmployee.EmployeeSurname;
@@ -461,12 +453,15 @@ namespace Electrociti.Controllers
                 return RedirectToAction("EmployeeProfile");
             }
         }
+
+
         public IActionResult Employees()
         {
             List<Employee> employees;
             employees = _context.Employee.ToList();
             return View(employees);
         }
+        
         public IActionResult Test()
         {
             List<Employee> employees;
@@ -493,15 +488,19 @@ namespace Electrociti.Controllers
         [HttpPost]
         public IActionResult Login(string login, string password)
         {
-            
+            if (string.IsNullOrEmpty(login) || string.IsNullOrEmpty(password))
+            {
+                ModelState.AddModelError(string.Empty, "Введите логин и пароль.");
+                return View();
+            }
+
             const string superAdminLogin = "99999999999";
             const string superAdminPassword = "superpassword";
 
             if (login == superAdminLogin && password == superAdminPassword)
             {
-                
-                HttpContext.Session.SetInt32("EmployeeId", -1); 
-                HttpContext.Session.SetInt32("EmployeeRole", 1); 
+                HttpContext.Session.SetInt32("EmployeeId", -1);
+                HttpContext.Session.SetInt32("EmployeeRole", 1);
 
                 EmployeeServiceEmployeeServices VMa = new EmployeeServiceEmployeeServices
                 {
@@ -518,39 +517,29 @@ namespace Electrociti.Controllers
             {
                 HttpContext.Session.SetInt32("EmployeeId", employee.EmployeeId);
                 HttpContext.Session.SetInt32("EmployeeRole", employee.EmployeeRole);
-            }
-            else
-            {
-                return View();
-            }
-
-            EmployeeServiceEmployeeServices VM = new EmployeeServiceEmployeeServices
-            {
-                Employee = _context.Employee.ToList(),
-                Services = _context.Service.ToList(),
-                EmployeeServices = _context.EmployeeService.ToList(),
-            };
-
-            if (employee != null && employee.EmployeeRole != 1)
-            {
+                if (employee.EmployeeRole == 1)
+                {
+                    return RedirectToAction("Admin", new EmployeeServiceEmployeeServices
+                    {
+                        Employee = _context.Employee.ToList(),
+                        Services = _context.Service.ToList(),
+                        EmployeeServices = _context.EmployeeService.ToList(),
+                    });
+                }
                 return RedirectToAction("Index", "Home");
             }
-            else if (employee != null && employee.EmployeeRole == 1)
-            {
-                return RedirectToAction("Admin", VM);
-            }
-            else
-            {
-                return View();
-            }
+
+            ModelState.AddModelError(string.Empty, "Неверный логин или пароль.");
+            return View();
         }
 
-        public IActionResult Logout()
+    public IActionResult Logout()
         {
             HttpContext.Session.Clear();
 
             return RedirectToAction("Index", "Home");
         }
+        
         [HttpGet]
         public IActionResult UpdateEmployeeProfile()
         {
@@ -559,6 +548,7 @@ namespace Electrociti.Controllers
 
             return View(employee);
         }
+        
         [HttpPost]
         public IActionResult UpdateEmployeeProfile(Employee updatedEmployee, string Password)
         {
@@ -584,6 +574,7 @@ namespace Electrociti.Controllers
             return View(updatedEmployee);
 
         }
+        
         [HttpPost]
         public IActionResult AddEmployeeService(int selectedServiceId, int employeeId)
         {
@@ -605,6 +596,7 @@ namespace Electrociti.Controllers
                 return RedirectToAction("Admin");
             }
         }
+        
         [HttpGet]
         public IActionResult AddEmployeeService(int employeeId)
         {
@@ -622,42 +614,39 @@ namespace Electrociti.Controllers
             ViewBag.Today = today.ToString("yyyy-MM-dd");
             return View();
         }
+
         [HttpPost]
-        public IActionResult AddEmployeeWork(string EmployeeWorkAdress, string EmployeeWorkPhone, string EmployeeWorkName, string EmployeeWorkTime, DateTime SelectDate, int employeeId)
+        public IActionResult AddEmployeeWork(EmployeeWork employeeWork)
         {
+            if (String.IsNullOrWhiteSpace(employeeWork.EmployeeWorkAdress))
+            {
+                return View(employeeWork);
+            }
             bool hasConflict = _context.EmployeeWork
-                .Any(e => e.EmployeeId == employeeId && e.EmployeeWorkDate == SelectDate && e.EmployeeWorkTime == EmployeeWorkTime);
+                    .Any(e => e.EmployeeId == employeeWork.EmployeeId && e.EmployeeWorkDate == employeeWork.EmployeeWorkDate && e.EmployeeWorkTime == employeeWork.EmployeeWorkTime);
 
-            if (hasConflict)
-            {
-                ModelState.AddModelError("", "У данного сотрудника уже есть назначенная работа на это время.");
-                return View(); 
-            }
+                if (hasConflict)
+                {
+                    ModelState.AddModelError("", "У данного сотрудника уже есть назначенная работа на это время.");
+                    return View(employeeWork);
+                }
 
-            EmployeeWork employeeWork = new()
-            {
-                EmployeeWorkDate = SelectDate,
-                EmployeeWorkTime = EmployeeWorkTime,
-                EmployeeWorkAdress = EmployeeWorkAdress,
-                EmployeeWorkPhone = EmployeeWorkPhone,
-                EmployeeWorkName = EmployeeWorkName,
-                EmployeeWorkStatus = "В ожидании",
-                EmployeeId = employeeId
-            };
-            _context.Add(employeeWork);
-            _context.SaveChanges();
+                employeeWork.EmployeeWorkStatus = "В ожидании";
+                _context.Add(employeeWork);
+                _context.SaveChanges();
 
-            int? EmployeeRole = HttpContext.Session.GetInt32("EmployeeRole");
-            if (EmployeeRole == 1)
-            {
-                return RedirectToAction("Admin");
-            }
-            else
-            {
-                return RedirectToAction("EmployeeProfile");
-            }
+                int? EmployeeRole = HttpContext.Session.GetInt32("EmployeeRole");
+                if (EmployeeRole == 1)
+                {
+                    return RedirectToAction("Admin");
+                }
+                else
+                {
+                    return RedirectToAction("EmployeeProfile");
+                }
+            
+
         }
-
 
         [HttpPost]
         public ActionResult CompleteWork(int workId)
@@ -712,6 +701,7 @@ namespace Electrociti.Controllers
             };
             return View(VM);
         }
+        
         [HttpPost]
         public IActionResult EmployeeWorks(int employeeId)
         {

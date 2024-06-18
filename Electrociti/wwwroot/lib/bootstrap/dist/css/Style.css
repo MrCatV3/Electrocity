@@ -727,8 +727,10 @@ header {
         }
 
 
-
-
+.text-danger {
+    color: red;
+    font-size: 14px;
+}
 /*Admin - services View*/
 .pagination {
     display: flex;

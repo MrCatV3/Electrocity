@@ -4,54 +4,62 @@
 @using Electrociti.ViewModels
 @model Employee
 
-<form asp-action="AddEmployee" asp-controller="Home" method="post" class="form-container">
+<form asp-action="AddEmployee" asp-controller="Home" method="post" class="form-container" enctype="multipart/form-data">
     <div>
         <div>
             <h1>Добавление сотрудника</h1>
         </div>
 
         <div>
-            <input type="file" id="eImgFile" accept="image/*" onchange="convertToBase64(this)">
-            <input type="hidden" id="eImg" name="Image" />
+            <input type="file" asp-for="EmployeeImage" id="eImgFile" accept="image/*" onchange="convertToBase64(this)">
+            <input type="hidden" id="eImg" name="EmployeeImage" />
+            <span asp-validation-for="EmployeeImage" class="text-danger"></span >
         </div>
 
         <div>
-            <input type="text" id="eName" name="EmployeeName" placeholder="Имя сотрудника" pattern="[A-Za-zА-Яа-яЁё]+" title="Только буквы" autocomplete="off" required />
+            <input type="text" asp-for="EmployeeName" placeholder="Имя сотрудника" pattern="[A-Za-zА-Яа-яЁё\s\-]+" title="Введите только буквы, пробелы и тире" autocomplete="off" required minlength="1" />
+            <span asp-validation-for="EmployeeName" class="text-danger"></span>
         </div>
 
         <div>
-            <input type="text" id="eSecName" name="SecondName" pattern="[A-Za-zА-Яа-яЁё]+" title="Только буквы" placeholder="Фамилия сотрудника" autocomplete="off" />
+            <input type="text" asp-for="EmployeeSurname" placeholder="Фамилия сотрудника" autocomplete="off" />
+            <span asp-validation-for="EmployeeSurname" class="text-danger"></span>
         </div>
 
         <div>
-            <input type="text" id="ePatronomic" name="Patronomic" pattern="[A-Za-zА-Яа-яЁё]+" title="Только буквы" placeholder="Отчество сотрудника" autocomplete="off" />
+            <input type="text" asp-for="EmployeePatronomic" placeholder="Отчество сотрудника (не обязательно)" autocomplete="off" />
         </div>
 
         <div>
-            <textarea id="eDescription" name="EmployeeDescription" placeholder="Описание сотрудника" autocomplete="off" class="textAreaDescription" oninput="autoResize(this)"></textarea>
+            <textarea asp-for="EmployeeDescription" placeholder="Описание сотрудника (не обязательно)" autocomplete="off" class="textAreaDescription" oninput="autoResize(this)"></textarea>
         </div>
 
         <div>
-            <input type="text" id="eAddress" name="EmployeeAddress" placeholder="Адрес сотрудника" autocomplete="off" required />
+            <input type="text" asp-for="EmployeeAddress" placeholder="Адрес сотрудника" autocomplete="off" required />
+            <span asp-validation-for="EmployeeAddress" class="text-danger"></span>
         </div>
 
         <div>
-            <input type="text" id="ePhone" name="EmployeePhone" placeholder="Телефон сотрудника" maxlength="11" autocomplete="off" required />
+            <input type="text" asp-for="EmployeePhone" placeholder="Телефон сотрудника" pattern="[0-9]+" title="Пример номера: 8999999999" minlength="11" maxlength="11" autocomplete="off" required />
             <span asp-validation-for="EmployeePhone" class="text-danger"></span>
         </div>
 
         <div>
-            <input type="text" id="eRate" name="EmployeeRate" placeholder="Рейтинг сотрудника" required min="1" pattern="[0-5]+" title="Введите только цифры" autocomplete="off"/>
+            <input type="text" asp-for="EmployeeRate" placeholder="Рейтинг сотрудника" autocomplete="off" required />
+            <span asp-validation-for="EmployeeRate" class="text-danger"></span>
         </div>
 
         <div>
-            <input type="password" id="ePassword" name="EmployeePassword" placeholder="Пароль" autocomplete="off" required />
+            <input type="password" asp-for="EmployeePassword" placeholder="Пароль сотрудника" autocomplete="off" required />
+            <span asp-validation-for="EmployeePassword" class="text-danger"></span>
         </div>
 
         <div>
             <p>Дата рождения</p>
-            <input type="date" id="eDate" name="SelectedDate" max="@ViewBag.Today" />
+            <input type="date" asp-for="EmployeeBirthday" max="@ViewBag.Today" />
+            <span asp-validation-for="EmployeeBirthday" class="text-danger"></span>
         </div>
+
         <button type="submit">Сохранить</button>
     </div>
 </form>
