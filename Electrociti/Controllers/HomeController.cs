@@ -429,6 +429,13 @@ namespace Electrociti.Controllers
             {
                 return View(updateEmployee);
             }
+            var phoneExists = _context.Employee.Any(e => e.EmployeePhone == updateEmployee.EmployeePhone && e.EmployeeId != updateEmployee.EmployeeId);
+            if (phoneExists)
+            {
+                ModelState.AddModelError("EmployeePhone", "Этот номер телефона уже существует в базе данных.");
+                return View(updateEmployee);
+            }
+
             var existingEmployee = _context.Employee.Find(updateEmployee.EmployeeId);
             if (existingEmployee != null)
             {
