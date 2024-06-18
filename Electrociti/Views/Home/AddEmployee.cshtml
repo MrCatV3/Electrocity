@@ -27,11 +27,11 @@
         </div>
 
         <div>
-            <input type="text" asp-for="EmployeePatronomic" placeholder="Отчество сотрудника (не обязательно)" autocomplete="off" />
+            <input type="text" style="margin: 15px 0px 15px 0px" asp-for="EmployeePatronomic" placeholder="Отчество сотрудника (не обязательно)" autocomplete="off" />
         </div>
 
         <div>
-            <textarea asp-for="EmployeeDescription" placeholder="Описание сотрудника (не обязательно)" autocomplete="off" class="textAreaDescription" oninput="autoResize(this)"></textarea>
+            <textarea asp-for="EmployeeDescription"  placeholder="Описание сотрудника (не обязательно)" autocomplete="off" class="textAreaDescription" oninput="autoResize(this)"></textarea>
         </div>
 
         <div>
@@ -45,7 +45,7 @@
         </div>
 
         <div>
-            <input type="text" asp-for="EmployeeRate" placeholder="Рейтинг сотрудника" autocomplete="off" required />
+            <input type="text" asp-for="EmployeeRate" placeholder="Рейтинг сотрудника" pattern="[0-5]" title="Введите число от 0 до 5" autocomplete="off" required />
             <span asp-validation-for="EmployeeRate" class="text-danger"></span>
         </div>
 

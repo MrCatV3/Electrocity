@@ -33,7 +33,7 @@ namespace Electrociti.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public IActionResult Index(string searchString, int? minCost, int? maxCost, bool? rate, bool? byMaterial, int experience = 1, int pageNumber = 1, int pageSize = 10)
+        public IActionResult Index(string searchString, int? minCost, int? maxCost, bool? rate, bool? byMaterial, int experience = 1, int pageNumber = 1, int pageSize = 4)
         {
             var query = _context.EmployeeService
             .Include(es => es.Employee)
@@ -318,9 +318,9 @@ namespace Electrociti.Controllers
                 var existingEmployee = _context.Employee.FirstOrDefault(e => e.EmployeePhone == employee.EmployeePhone);
                 if (existingEmployee != null)
                 {
-                ModelState.AddModelError("EmployeePhone", "Сотрудник с таким номером телефона уже существует.");
-                return View("AddEmployee", employee);
-            }
+                    ModelState.AddModelError("EmployeePhone", "Сотрудник с таким номером телефона уже существует.");
+                    return View("AddEmployee", employee);
+                }
 
                 // Проверка валидности строки Base64
                 if (!IsBase64String(employee.EmployeeImage))
